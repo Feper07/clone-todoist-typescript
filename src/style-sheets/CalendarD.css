@@ -1,0 +1,202 @@
+
+.etc-button-calendar {
+    padding:1%;
+    color: rgb(139, 133, 133);
+    background-color: white;
+    cursor: pointer;
+    border: #c1bbbb 1px solid;
+    border-radius: 5px;
+    font-size: 1.8vh;
+    height: 30px;
+    position: relative;
+    right: -250px;
+    min-width: 170px;
+    display: flex;  
+    align-items: flex-start;  
+    justify-content: center;
+}
+
+.etc-button-calendar:hover {
+    background: #e7e7e7;
+}
+
+.now{
+    color: rgb(164, 158, 158) !important;
+    font-size: 1.6vh !important;
+}
+
+.icon-cicalendar{
+   font-size: 2.5vh;
+}
+
+.component-calendar-center{
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    background-color: white !important;
+}
+
+.span-text{
+    font-weight: 600;
+}
+
+.hoy{
+    color: rgb(116, 101, 131);
+    font-size: 3vh;
+    color: purple;
+}
+
+.mañana{
+   color: rgb(46, 40, 12);
+   font-size: 3vh;
+   color: orange;
+}
+
+.fds{
+    color: rgb(29, 41, 29);
+    font-size: 3.5vh;
+    color: green;
+}
+
+.not-date{
+    font-size: 2vh;
+}
+
+.color-text-addtask{
+    width: 140px !important;
+}
+
+
+/*.etc-button-calendar {
+    padding:1%;
+    color: rgb(139, 133, 133);
+    background-color: white;
+    cursor: pointer;
+    border: #c1bbbb 1px solid;
+    border-radius: 5px;
+    font-size: 1.8vh;
+    position: relative;
+    right: -250px;
+    min-width: 170px;
+    display: flex;  
+    align-items: flex-start;  
+    justify-content: center;
+}
+
+.etc-button-calendar:hover {
+    background: #e7e7e7;
+}
+
+.now{
+    color: rgb(164, 158, 158) !important;
+    font-size: 1.6vh !important;
+}
+
+.icon-cicalendar{
+   font-size: 2.5vh;
+}
+
+.component-calendar-center{
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    background-color: white !important;
+}
+
+.span-text{
+    font-weight: 600;
+}
+
+.hoy{
+    color: rgb(116, 101, 131);
+    font-size: 3vh;
+    color: purple;
+}
+
+.mañana{
+   color: rgb(46, 40, 12);
+   font-size: 3vh;
+   color: orange;
+}
+
+.fds{
+    color: rgb(29, 41, 29);
+    font-size: 3.5vh;
+    color: green;
+}
+
+.not-date{
+    font-size: 2vh;
+}
+
+.color-text-addtask{
+    width: 140px !important;
+}
+*/
+
+/*
+
+
+.etc-button-calendar {
+    padding:1%;
+    color: rgb(139, 133, 133);
+    background-color: white;
+    cursor: pointer;
+    border-color:  #e7e7e7;
+    border-style: solid ;
+    font-size: 1.8vh;
+    position: relative;
+    right: -250px;    
+}
+
+.etc-button-calendar:hover {
+    background: #e7e7e7;
+}
+
+.now{
+    color: rgb(164, 158, 158) !important;
+    font-size: 1.6vh !important;
+}
+
+.icon-cicalendar{
+   font-size: 2.5vh;
+}
+
+.component-calendar-center{
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    background-color: white !important;
+}
+
+.span-text{
+    font-weight: 600;
+}
+
+.hoy{
+    color: rgb(116, 101, 131);
+    font-size: 3vh;
+    color: purple;
+}
+
+.mañana{
+   color: rgb(46, 40, 12); 
+   font-size: 3vh;
+   color: orange;
+}
+
+.fds{
+    color: rgb(29, 41, 29);
+    font-size: 3.5vh;
+    color: green;
+}
+
+.not-date{
+    font-size: 2vh;
+}
+
+.color-text-addtask{
+    width: 140px !important;
+}
+
+*/

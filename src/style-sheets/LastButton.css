@@ -1,0 +1,64 @@
+.last-container-option{
+    padding-left : 1%;
+    position: absolute; /**/
+}
+
+.last-container-button-main{
+    padding:1%;
+    width: 140px;
+    color: rgb(139, 133, 133);
+    background-color: white;
+    cursor: pointer;
+    border: #c1bbbb 1px solid;
+    border-radius: 5px;
+    font-size: 1.8vh;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.last-container-button-main:hover {
+    background: #e7e7e7;
+}
+
+.etc-options-last-container > button {
+    display: grid;
+    grid-template-columns: 0.5fr 2fr 0.5fr;
+    justify-content: flex-start;
+    align-items: center;
+    width: 120px;
+    padding : 1%;
+    color: #646262;
+    border-color:  #e7e7e7;
+    background-color: white;
+    border-style: solid ;
+    cursor: pointer;
+    font-size: 1.8vh;
+    position: relative; /**/
+    right: 20px;
+}
+
+.etc-options-priority > button:hover {
+    background: #e7e7e7;
+}
+
+.flag-red{
+    color: rgb(213, 48, 48);
+    font-size: 1.6vh;
+}
+
+.flag-orange{
+    color: orange;
+    font-size: 1.6vh;
+}
+
+.flag-blue{
+    color: rgb(28, 28, 245);
+    font-size: 1.6vh;
+}
+
+.nike{
+    color: red;
+    font-size: 1.6vh;
+}

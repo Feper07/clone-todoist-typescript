@@ -1,0 +1,34 @@
+.reminder-main{
+    padding: 0%;
+}
+
+.button-reminder{
+    display: flex;
+    flex-direction: row;
+    width: 160px;
+    color: rgb(139, 133, 133);
+    cursor: pointer;
+    border: #c1bbbb 1px solid;
+    border-radius: 5px;
+    font-size: 1.8vh;
+    height: 30px;
+    background-color: white;
+}
+
+.button-reminder:hover {
+    background: #e7e7e7;
+}
+
+.icon-ciclok{
+    font-size: 2.5vh;
+}
+
+.pro{
+    color: #8f4700;
+    background-color: #faead1;
+    width: 30px;
+    font-size: 1.5vh;
+    font-weight: 800;
+    margin: 2%;
+    border-radius: 15%;
+}

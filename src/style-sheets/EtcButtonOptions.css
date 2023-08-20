@@ -1,0 +1,84 @@
+.select-options{
+    padding : 0%;
+    position: absolute; /**/
+}
+
+.etc-button-last{
+    padding:1%; 
+    width: 30px;
+    color: rgb(139, 133, 133);
+    background-color: white;
+    cursor: pointer;
+    border: #c1bbbb 1px solid;
+    border-radius: 5px;
+    font-size: 1.8vh;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.etc-button-last:hover {
+    background: #e7e7e7;
+}
+
+.etc-options > button {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 250px;
+    padding : 1%;
+    color: #646262;
+    background-color: white;    
+    border-color:  #e7e7e7;
+    border-style: solid;
+    cursor: pointer;
+    font-size: 1.8vh;
+    position: relative; /**/
+}
+
+.etc-options > button:hover {
+background: #e7e7e7;
+}
+
+.bstag-out{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    padding : 1%;
+    padding-right : 5%;
+    color: #0e0b0b;
+}
+
+.bstag-in{
+    padding-right : 15%;  
+    color: #646262;
+}
+
+.text-a{
+    color: #646262;
+}
+
+.button-b:hover {
+    background: #e7e7e7;
+}
+
+.tbpuzzle{ 
+    padding-right : 5%;  
+    color: #646262;
+}
+
+.button-start{
+    justify-content: start !important;
+}
+
+.color-text{
+    color: red !important;
+    height: 30px;
+}
+
+.icon-etc{
+    font-size: 3vh;
+}
+
