@@ -13,9 +13,11 @@
 .container-menu-main{
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: flex-start;
+    padding-top: 5%;
     padding-left: 1%;
+    height: 2000px;
 }
 
 .menu-four-alternatives-icons{
@@ -24,9 +26,12 @@
     background-color: white;
     font-size: 2.2vh;
     height: 40px;
+    width: 210px;
     border: none;
     font-weight: 400;
     border: white 1px solid;
+    display: flex;
+    justify-content: flex-start;
 }
 
 .menu-four-alternatives-icons:hover {
@@ -43,6 +48,7 @@
 
 .title-plus-component-button-task{
     padding-left: 6%;
+    height: 2000px;
 }
 
 .title-buttons-container-main{

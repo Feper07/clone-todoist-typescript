@@ -1,3 +1,4 @@
+  
   import React, { useState, useEffect, useRef } from 'react';
   import "../style-sheets/CalendarD.css";
   import CalendarComponent from './CalendarComponent';
@@ -6,10 +7,18 @@
   import { BsSlashCircle } from "react-icons/bs";
   import { CiCalendarDate, CiCloudOn, CiLight } from "react-icons/ci";
 
-    function CalendarD() {
+   interface CalendarDProps{
+     onChange?: (date: Date)=>void
+     value?: Date
+   }
+
+  function CalendarD(props: CalendarDProps) {
       const [showOptions, setShowOptions] = useState(false);
-      const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+      const [selectedDate, setSelectedDate] = useState<Date | null | undefined>(props.value);
       const [todayDate, setTodayDate] = useState<Date>(new Date());
+      React.useEffect(() => {
+        setSelectedDate(props.value);         
+      }, [props.value]);
 
       const [tomorrowDate, setTomorrowDate] = useState<Date>(() => {
         const today = new Date();
@@ -47,8 +56,16 @@
 
       const handleDateSelected = (date: Date) => {
         setSelectedDate(date);
+        if(props.onChange){
+          props.onChange(date);
+        }
         toggleOpciones(); // Cerrar las opciones después de seleccionar una fecha
       };
+
+      const handleSinFechaClick = () => {
+        setSelectedDate(null); // Establece la fecha seleccionada como nula (sin fecha)
+        toggleOpciones(); // Cierra las opciones después de seleccionar "Sin fecha"
+      };      
 
       useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -84,12 +101,16 @@
                 <div className='day-tomorrow'>{`${tomorrowDate.toLocaleDateString('es', { weekday: 'short' }).toUpperCase()} ${tomorrowDate.getDate()}`}&nbsp;</div>
               </button>
 
-              <button onClick={() => ("nextSaturday")}>
+              <button onClick={() => handleOpcionClick("nextSaturday")}>
                 <div className='span-text'><CiLight className='fds' />&nbsp;&nbsp;Próximo domingo</div>
                 <div className='day-fdhandleOpcionClicks'>{`${nextSaturdayDate.toLocaleDateString('es', { weekday: 'short' }).toUpperCase()} ${nextSaturdayDate.getDate()}`}&nbsp;</div>
               </button>
 
-              <button className='button-start'>&nbsp;<BsSlashCircle className='not-date'/><div className='span-text'>&nbsp;&nbsp;&nbsp;Sin fecha</div></button>
+              <button className='button-start' onClick={handleSinFechaClick}>
+                <BsSlashCircle className='not-date'/>
+                <div className='span-text'>&nbsp;&nbsp;&nbsp;Sin fecha</div>
+              </button>
+
 
               <button className='component-calendar-center' onClick={() => handleOpcionClick('add-extension')}>
                 <CalendarComponent selectedDateShow={selectedDate} onDateSelected={handleDateSelected} />

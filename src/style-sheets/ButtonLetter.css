@@ -29,6 +29,10 @@
     width: 100%;
 }
 
+.component-remove-button{
+    height: 90px;
+}
+
 .remove-button{
     padding:1%; 
     width: 22px;
@@ -44,10 +48,27 @@
 }
 
 .remove-button:hover {
-    background: #bb3030;
+    background: #c5c2c2;
+    color: black ;
+}
+.remove-button-priority1:hover {
+    background: #d53030;
     color: white ;
 }
-
+.remove-button-priority2:hover {
+    background: orange;
+    color: white ;
+}
+.remove-button-priority3:hover {
+    background: #1c1cf5;
+    color: white ;
+}
+.remove-button-priority4:hover {
+    background: white;
+    color: white ;
+}
 .remove-icon{
     font-size: 3.8vh;
 }
+
+

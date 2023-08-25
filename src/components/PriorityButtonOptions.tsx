@@ -3,10 +3,16 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "../style-sheets/PriorityButtonOptions.css";
 import { BsFlagFill, BsFlag, BsCheck } from "react-icons/bs";
 
-const PriorityButtonOptions = () => {
+interface PriorityButtonOptions{
+  onChange?: (priority: string)=>void,
+  value?:string
+}
+const PriorityButtonOptions = (props:PriorityButtonOptions) => {
   const [priorityButton, setPriorityButton] = useState(false);
-  const [selectedOption, setSelectedOption] = useState("");
-
+  const [selectedOption, setSelectedOption] = useState<string>(props.value?props.value:"");
+  React.useEffect(() => {
+    setSelectedOption(props.value?props.value:"");
+  }, [props.value]);
   const containerRef = useRef<HTMLDivElement | null>(null);
 
   const toggleOpciones = () => {
@@ -15,8 +21,10 @@ const PriorityButtonOptions = () => {
 
   const handleOpcionClick = (option: string) => {
     setSelectedOption(option);
+    if(props.onChange){
+      props.onChange(option);
+    }
     setPriorityButton(false);
-    console.log(`selected option: ${option}`);
   };
 
   useEffect(() => {
