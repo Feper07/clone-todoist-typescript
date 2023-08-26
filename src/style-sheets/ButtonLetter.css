@@ -71,4 +71,21 @@
     font-size: 3.8vh;
 }
 
+.last-button-b-disabled{
+    background-color: #eda59e;
+    color: white;
+    border: #c1bbbb 1px solid;
+    border-radius: 5px;
+    height: 35px;
+    font-size: 1.8vh;
+    width: 100px;
+    height: 35px;
+}
+
+.last-button-b{
+    width: 100px;
+    height: 35px;
+    font-size: 1.8vh;
+}
+
 

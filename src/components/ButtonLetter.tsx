@@ -63,6 +63,20 @@ const ButtonLetter = () => {
     }
   };
 
+  const handleAddTaskWithDate = (date: Date | null) => {
+    if (task.name.trim() !== '') {
+      const dueDate = date || task.due_date; // Use the provided date or the existing due_date    
+      const newTask: Task = {
+        name: task.name,
+        description: task.description,
+        priority: task.priority,
+        due_date: dueDate,
+      };
+      setTextAdd([...textAdd, newTask]);
+      setTask({ name: "", description: "", priority: undefined, due_date: undefined });
+    }
+  };  
+  
   const handleRemoveTask = (index: number) => {
     const updatedTextAdd = textAdd.filter((_, i) => i !== index);
     setTextAdd(updatedTextAdd);
@@ -74,12 +88,10 @@ const ButtonLetter = () => {
     if (!dueDate) {
       return null;
     }
-  
     const dateObject = dueDate instanceof Date ? dueDate : new Date(dueDate);
     const daysOfWeek = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
     const dayName = daysOfWeek[dateObject.getDay()];
     const dayNumber = dateObject.getDate();
-  
     return `${dayName} ${dayNumber}`;
   }
   
@@ -109,7 +121,6 @@ const ButtonLetter = () => {
     }
   }
   
-
   return (
     <div className="ButtonLetter-main">
       <div className="text-task-buttonletter">

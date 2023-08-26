@@ -93,7 +93,7 @@
               <button onClick={() => handleOpcionClick("today")}>
                 <div className='span-text'>
                   <CiCalendarDate className='hoy' />&nbsp;&nbsp;&nbsp;Hoy
-                </div>
+                </div> 
               </button> 
               
              <button onClick={() => handleOpcionClick("tomorrow")}>
@@ -111,8 +111,7 @@
                 <div className='span-text'>&nbsp;&nbsp;&nbsp;Sin fecha</div>
               </button>
 
-
-              <button className='component-calendar-center' onClick={() => handleOpcionClick('add-extension')}>
+              <button className='component-calendar-center'>
                 <CalendarComponent selectedDateShow={selectedDate} onDateSelected={handleDateSelected} />
               </button>
 
