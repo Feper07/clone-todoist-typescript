@@ -63,20 +63,6 @@ const ButtonLetter = () => {
     }
   };
 
-  const handleAddTaskWithDate = (date: Date | null) => {
-    if (task.name.trim() !== '') {
-      const dueDate = date || task.due_date; // Use the provided date or the existing due_date    
-      const newTask: Task = {
-        name: task.name,
-        description: task.description,
-        priority: task.priority,
-        due_date: dueDate,
-      };
-      setTextAdd([...textAdd, newTask]);
-      setTask({ name: "", description: "", priority: undefined, due_date: undefined });
-    }
-  };  
-  
   const handleRemoveTask = (index: number) => {
     const updatedTextAdd = textAdd.filter((_, i) => i !== index);
     setTextAdd(updatedTextAdd);
@@ -88,11 +74,22 @@ const ButtonLetter = () => {
     if (!dueDate) {
       return null;
     }
+  
     const dateObject = dueDate instanceof Date ? dueDate : new Date(dueDate);
+    const currentDate = new Date();
+  
     const daysOfWeek = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
     const dayName = daysOfWeek[dateObject.getDay()];
     const dayNumber = dateObject.getDate();
-    return `${dayName} ${dayNumber}`;
+    const monthName = dateObject.toLocaleString('es', { month: 'long' });
+  
+    if (dateObject.getFullYear() !== currentDate.getFullYear()) {
+      return `${dayNumber} de ${monthName} de ${dateObject.getFullYear()}`;
+    } else if (dateObject.getMonth() !== currentDate.getMonth()) {
+      return `${dayNumber} de ${monthName}`;
+    } else {
+      return `${dayName} ${dayNumber}`;
+    }
   }
   
   function getDueDateColor(dueDate: Date | string | undefined): string {
@@ -132,18 +129,17 @@ const ButtonLetter = () => {
               </div>
               &nbsp;&nbsp;&nbsp;
               <div className='date-name-selected'>
-                {text.name}
-                <p>{text.description}</p>
-                {text.due_date ? (
-                  <p style={{ color: getDueDateColor(text.due_date) }}>
-                    {formatDueDate(text.due_date)}
-                  </p>
-                ) : null}
-              </div>
+              {text.name}
+              <p>{text.description}</p>
+              {text.due_date ? (
+                <p style={{ color: getDueDateColor(text.due_date) }}>
+                  {formatDueDate(text.due_date)}
+                </p>
+              ) : null}
+            </div>
           </div>
         ))}
-      </div>
-      
+      </div>      
       <div>
         <input
           className="input-calendar-a"

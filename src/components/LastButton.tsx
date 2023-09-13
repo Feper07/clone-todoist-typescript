@@ -67,21 +67,21 @@ const LastButton = () => {
         )}
       </button>
       {priorityButton && (
-        <div className="etc-options-last-">
+        <div className="etc-options-last-container">
           <button
             onClick={() => handleOpcionClick("P1")}
             className="last-container-opcontainertion"
           >
-            &nbsp;<TfiLayoutSliderAlt className="flag-red" />
-            Rutinas
+            &nbsp;&nbsp;&nbsp;<TfiLayoutSliderAlt className="flag-red" />
+            &nbsp;&nbsp;&nbsp;Rutinas&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             {selectedOption === "P1" && <BsCheck className="nike" />}
           </button>
           <button
             onClick={() => handleOpcionClick("P2")}
             className="priority-option"
           >
-            &nbsp;<TfiLayoutSliderAlt className="flag-orange" />
-            Inspiración
+            &nbsp;&nbsp;&nbsp;<TfiLayoutSliderAlt className="flag-orange" />
+            &nbsp;&nbsp;&nbsp;Inspiración&nbsp;&nbsp;&nbsp;&nbsp;
             {selectedOption === "P2" && <BsCheck className="nike" />}
           </button>
         </div>

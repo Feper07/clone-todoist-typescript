@@ -23,11 +23,10 @@
 }
 
 .etc-options-last-container > button {
-    display: grid;
-    grid-template-columns: 0.5fr 2fr 0.5fr;
+    display: flex;
     justify-content: flex-start;
     align-items: center;
-    width: 120px;
+    width: 140px;
     padding : 1%;
     color: #646262;
     border-color:  #e7e7e7;
@@ -36,7 +35,6 @@
     cursor: pointer;
     font-size: 1.8vh;
     position: relative; /**/
-    right: 20px;
 }
 
 .etc-options-priority > button:hover {
