@@ -33,6 +33,7 @@
     font-weight: 400;
     display: flex;
     justify-content: flex-start;
+    align-items: center;
 }
 
 .menu-four-alternatives-icons:hover {
@@ -136,6 +137,14 @@
 .title-buttons{
     font-weight: 700;
     font-size: 3.6vh;
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+}
+
+.date-today-task-item{
+    font-size: 1.6vh;
+    font-weight: normal;
 }
 
 .component-button-task{

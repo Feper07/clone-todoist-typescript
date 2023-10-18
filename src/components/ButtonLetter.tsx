@@ -14,7 +14,7 @@ enum Priority{
   Priority2 = "P2",
   Priority3 = "P3",
   Priority4 = "P4",
-}
+} //
 
 function get_class(p: Priority):string {
    switch (p) {
@@ -39,6 +39,7 @@ interface Task{
 const ButtonLetter = () => {
   const [task, setTask] = useState<Task>({name: "", description:""});
   const [textAdd, setTextAdd] = useState<Task[]>([]);
+
 
   const handleInputChange = (event: { target: { value: string } }) => {
     setTask({...task, ...{name:event.target.value }})
@@ -102,7 +103,7 @@ const ButtonLetter = () => {
     // Get today's date
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-  
+   
     // Get tomorrow's date
     const tomorrow = new Date(today);
     tomorrow.setDate(tomorrow.getDate() + 1);
