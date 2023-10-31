@@ -18,15 +18,12 @@ import { HiOutlineSquares2X2 } from "react-icons/hi2";
 import { GoKebabHorizontal } from "react-icons/go";
 import { FaRegClipboard } from "react-icons/fa";
 import { FaRegCheckSquare } from "react-icons/fa";
+import { Task } from "./typos";
 
-//Type for task list
-type Tarea = { //
-  titulo: string;
-  fecha: string;
-};
 
 // Component to display the "Bandeja de entrada"
-function BandejaEntrada({ tareas }: { tareas: Tarea[] })  {
+function BandejaEntrada({ tareas, addTask, removeTask }: { tareas: Task[], addTask:(task: Task)=>void, removeTask: (index:number)=>void })  {
+  
   return (
         <div className='title-plus-component-button-task'>
           <div className='title-buttons-container-main'>
@@ -42,20 +39,36 @@ function BandejaEntrada({ tareas }: { tareas: Tarea[] })  {
           </div> 
           <div className='component-button-task'> 
               <div>
-                <ButtonLetter/>
+                <ButtonLetter tareas={tareas} addTask={addTask} removeTask={removeTask}/>
               </div>
           </div>
         </div>
   
   );
 }
+function isToday(dateToCheck: Date|undefined):boolean {
+  if (dateToCheck){
+    // Get the current date
+    const currentDate = new Date();
+
+    // Compare the two dates
+    return (
+      dateToCheck.getDate() === currentDate.getDate() &&
+      dateToCheck.getMonth() === currentDate.getMonth() &&
+      dateToCheck.getFullYear() === currentDate.getFullYear()
+    );
+  }else{
+    return false
+  }
+}
 
 // Component to display the date "Hoy"
 
-function Hoy({ tareas }: { tareas: Tarea[] })  {
+function Hoy({ tareas }: { tareas: Task[] })  {
   const fechaHoy = new Date().toLocaleDateString(); // Replace with my logic to get the date
-  const tareasHoy = tareas.filter((tarea) => tarea.fecha === fechaHoy);
- 
+  const tareasHoy = tareas.filter((tarea) => isToday(tarea.due_date));
+
+
   return (
 
     <div className='title-plus-component-button-task'>
@@ -72,9 +85,9 @@ function Hoy({ tareas }: { tareas: Tarea[] })  {
       <div>
         <h3>Tareas</h3>
         <ul>
-        {tareasHoy.map((tarea: { titulo: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | React.ReactFragment | React.ReactPortal | null | undefined; }, index: React.Key | null | undefined) => (
+        {tareasHoy.map((tarea: Task, index: number) => (
           <li key={index} className="task-item">
-            {tarea.titulo}
+            {tarea.name}
           </li>
         ))}
       </ul>
@@ -84,9 +97,35 @@ function Hoy({ tareas }: { tareas: Tarea[] })  {
   );
 }
 
+//funtion
+
+function isNextSunday(dateToCheck: Date | undefined) {
+  if (dateToCheck) {
+    const today = new Date();
+    const dayOfWeek = today.getDay(); // 0 = domingo, 1 = lunes, ..., 6 = sábado
+    const daysUntilNextSunday = 7 - dayOfWeek;
+
+    // Crear una fecha para el próximo domingo
+    const nextSunday = new Date(today);
+
+    nextSunday.setDate(today.getDate() + daysUntilNextSunday);
+
+    // Comparar la fecha con el próximo domingo
+    return (
+      dateToCheck.getDate() === nextSunday.getDate() &&
+      dateToCheck.getMonth() === nextSunday.getMonth() &&
+      dateToCheck.getFullYear() === nextSunday.getFullYear()
+    );
+  } else {
+    return false;
+  }
+}
+
+
+
 // Component to display the date "próximo"
 
-function Proximo({ tareas }: { tareas: Tarea[] }) {
+function Proximo({ tareas }: { tareas: Task[] }) {
   const hoy = new Date(); // Obtener la fecha de hoy
   const diaSemana = hoy.getDay(); // Obtener el día de la semana (0 = domingo, 1 = lunes, ..., 6 = sábado)
 
@@ -100,7 +139,7 @@ function Proximo({ tareas }: { tareas: Tarea[] }) {
   // Formatear la fecha del próximo domingo como una cadena legible
   const fechaProximoDomingo = proximoDomingo.toLocaleDateString();
 
-  const tareasProximoDomingo = tareas.filter((tarea: { fecha: string }) => tarea.fecha === fechaProximoDomingo);
+  const tareasProximoDomingo = tareas.filter((tarea: Task) => isNextSunday(tarea.due_date) );
 
   return (
     <div className='title-plus-component-button-task'>
@@ -117,9 +156,9 @@ function Proximo({ tareas }: { tareas: Tarea[] }) {
         <div>
           <h3>Tareas</h3>
           <ul>
-            {tareasProximoDomingo.map((tarea: { titulo: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | React.ReactFragment | React.ReactPortal | null | undefined; }, index: React.Key | null | undefined) => (
+            {tareasProximoDomingo.map((tarea: Task, index: number) => (
               <li key={index} className="task-item">
-                {tarea.titulo}
+                {tarea.name}
               </li>
             ))}
           </ul>
@@ -157,14 +196,19 @@ function Proximo({ tareas }: { tareas: Tarea[] }) {
 
 
 function App() {
-
+  
   // Example: I'm gonna say that I have a list of tasks with dates in my local state
-  const [tareas, setTareas] = useState<Tarea[]>([
-    { titulo: "Tarea 1", fecha: "08/09/2023" },
-    { titulo: "Tarea 2", fecha: "09/09/2023" },
-    { titulo: "Tarea 3", fecha: "08/09/2023" },
-    // ... Add more tasks with dates
-  ]);
+  const [tareas, setTareas] = useState<Task[]>([]);
+  const addTask = (task:Task) => {
+    if (task.name.trim() !== '') {
+      setTareas(tareas.concat([task]));
+    }
+  };
+
+  const removeTask = (index: number) => {
+    const updatedTextAdd = tareas.filter((_, i) => i !== index);
+    setTareas(updatedTextAdd);
+  };
 
   return (
     
@@ -176,16 +220,14 @@ function App() {
           </div>
           <div className='menu-plus-options'>
             <div className='container-menu-main'>
-              <button className='menu-four-alternatives-icons'>
                 <Link to="/bandeja-de-entrada" className="link-bandeja-entrada">
                   <GoInbox className='alternative-icon-a'/>&nbsp;&nbsp;Bandeja de entrada
                 </Link>
-              </button>
-              <button className='menu-four-alternatives-icons'>
                 <Link to="/hoy" className="link-hoy">
+                <button className='menu-four-alternatives-icons'>
                   <FaRegCheckSquare className='alternative-icon-b'/>&nbsp;&nbsp;Hoy
+                  </button>
                 </Link>
-              </button>
               <button className='menu-four-alternatives-icons'>
                 <Link to="/proximo" className="link-proximo">
                   <TbAdjustmentsHorizontal className='alternative-icon-c'/>&nbsp;&nbsp;Próximo domingo
@@ -202,7 +244,7 @@ function App() {
               <Routes>
                 <Route
                   path="/bandeja-de-entrada"
-                  element={<BandejaEntrada tareas={tareas} />}
+                  element={<BandejaEntrada tareas={tareas} addTask={addTask} removeTask={removeTask}/>}
                 />
                 <Route path="/hoy" element={<Hoy tareas={tareas}/>} />
                 <Route path="/proximo" element={<Proximo tareas={tareas}/>} /> 

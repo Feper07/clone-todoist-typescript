@@ -47,7 +47,7 @@ const EtcButtonOptions = () => {
             <div className='tbpuzzle'>&nbsp;<CiExport className='icon-etc'/></div>
             Añadir extensión
           </button>
-          <button className='color-text' onClick={() => handleOpcionClick('edit-task-actions')}>
+           <button className='color-text' onClick={() => handleOpcionClick('edit-task-actions')}>
             &nbsp;Editar acciones de tarea
           </button>
         </div>

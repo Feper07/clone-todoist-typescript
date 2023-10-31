@@ -8,38 +8,31 @@ import EtcButtonOptions from './EtcButtonOptions';
 import LastButton from './LastButton';
 import { HiOutlineCheckCircle } from "react-icons/hi";
 import { HiCheck } from "react-icons/hi";
-
-enum Priority{
-  Priority1 = "P1",
-  Priority2 = "P2",
-  Priority3 = "P3",
-  Priority4 = "P4",
-} //
+import { Priority, Task } from '../typos';
+import AddTask from './AddTask';
+import { id } from 'date-fns/locale';
 
 function get_class(p: Priority):string {
-   switch (p) {
-    case Priority.Priority1:
-      return "remove-button-priority1"
-    case Priority.Priority2:
-      return "remove-button-priority2"
-    case Priority.Priority3:
-      return "remove-button-priority3"
-    case Priority.Priority4:
-      return "remove-button-priority4"
-   }
+  switch (p) {
+   case Priority.Priority1:
+     return "remove-button-priority1"
+   case Priority.Priority2:
+     return "remove-button-priority2"
+   case Priority.Priority3:
+     return "remove-button-priority3"
+   case Priority.Priority4:
+     return "remove-button-priority4"
+  }
 }
 
-interface Task{
-  name: string,
-  description: string,
-  priority?: Priority,
-  due_date?: Date
+interface ButtonLetterProps{
+  tareas:Task[],
+  addTask:(task: Task)=>void,
+  removeTask: (index:number)=>void
 }
-
-const ButtonLetter = () => {
+const ButtonLetter = (props: ButtonLetterProps) => {
   const [task, setTask] = useState<Task>({name: "", description:""});
-  const [textAdd, setTextAdd] = useState<Task[]>([]);
-
+  //const [textAdd, setTextAdd] = useState<Task[]>([]);
 
   const handleInputChange = (event: { target: { value: string } }) => {
     setTask({...task, ...{name:event.target.value }})
@@ -59,14 +52,13 @@ const ButtonLetter = () => {
 
   const handleAddTask = () => {
     if (task.name.trim() !== '') {
-      setTextAdd(textAdd.concat([task]));
+      props.addTask(task);
       setTask({name: "", description:""});
     }
   };
 
   const handleRemoveTask = (index: number) => {
-    const updatedTextAdd = textAdd.filter((_, i) => i !== index);
-    setTextAdd(updatedTextAdd);
+     props.removeTask(index)
   };
 
   const isButtonActive = task.name.trim() !== '';
@@ -122,7 +114,7 @@ const ButtonLetter = () => {
   return (
     <div className="ButtonLetter-main">
       <div className="text-task-buttonletter">
-        {textAdd.map((text, index) => (
+        {props.tareas.map((text, index) => (
           <div key={index} className="task-item">
               <div className='component-remove-button'> 
                 <button className={(["remove-button", text.priority?get_class(text.priority): ""].join(" "))} onClick={() => handleRemoveTask(index)}>
@@ -171,6 +163,7 @@ const ButtonLetter = () => {
             Añadir Tarea
           </button>
         </div>
+
       </div>
     </div>
   );
