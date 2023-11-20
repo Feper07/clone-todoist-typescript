@@ -279,3 +279,63 @@
 .last-button-b:hover {
     background: #e7e7e7;
 }
+
+.text-task-buttonletter{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    width: 100%;
+}
+
+.task-item-2{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding-top: 2.5%;
+    padding-bottom: 1.5%;
+    font-size: 2.1vh;
+    border-bottom: #efecec 1px solid;
+    width: 100%;
+}
+
+.component-button-task-2{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 2%;
+    width: 1020px;
+    border: #c1bbbb 1px solid;
+    border-radius: 10px;
+}
+
+.pre-component-task-item{
+    width: 100%;
+}
+
+h3{
+    display: flex;
+    justify-content: center;
+}
+
+.HiCheck-a{
+    color: white;
+    padding-right: 1%;
+    width: 25px;
+    font-size: 2.4vh;
+}
+
+.HiCheck-b{
+    color:white;
+    padding-right: 3%;
+    width: 25px;
+}
+
+.task-number{
+    padding-right: 1%;
+}
+
+.item-task-2c{
+    margin-top: 2.2%;
+}
+  

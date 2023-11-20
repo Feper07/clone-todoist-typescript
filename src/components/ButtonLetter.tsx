@@ -11,6 +11,7 @@ import { HiCheck } from "react-icons/hi";
 import { Priority, Task } from '../typos';
 import AddTask from './AddTask';
 import { id } from 'date-fns/locale';
+import TaskList from './TaskList';
 
 function get_class(p: Priority):string {
   switch (p) {
@@ -96,7 +97,7 @@ const ButtonLetter = (props: ButtonLetterProps) => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
    
-    // Get tomorrow's date
+    // Get tomor row's date
     const tomorrow = new Date(today);
     tomorrow.setDate(tomorrow.getDate() + 1);
   
@@ -113,26 +114,7 @@ const ButtonLetter = (props: ButtonLetterProps) => {
   
   return (
     <div className="ButtonLetter-main">
-      <div className="text-task-buttonletter">
-        {props.tareas.map((text, index) => (
-          <div key={index} className="task-item">
-              <div className='component-remove-button'> 
-                <button className={(["remove-button", text.priority?get_class(text.priority): ""].join(" "))} onClick={() => handleRemoveTask(index)}>
-                  <HiCheck className={"remove-icon"} /></button>
-              </div>
-              &nbsp;&nbsp;&nbsp;
-              <div className='date-name-selected'>
-              {text.name}
-              <p>{text.description}</p>
-              {text.due_date ? (
-                <p style={{ color: getDueDateColor(text.due_date) }}>
-                  {formatDueDate(text.due_date)}
-                </p>
-              ) : null}
-            </div>
-          </div>
-        ))}
-      </div>      
+      <TaskList tareas={props.tareas} removeTask={props.removeTask}></TaskList>      
       <div>
         <input
           className="input-calendar-a"

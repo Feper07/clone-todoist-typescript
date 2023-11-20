@@ -18,12 +18,15 @@ import { HiOutlineSquares2X2 } from "react-icons/hi2";
 import { GoKebabHorizontal } from "react-icons/go";
 import { FaRegClipboard } from "react-icons/fa";
 import { FaRegCheckSquare } from "react-icons/fa";
-import { Task } from "./typos";
+import { Task, Priority} from "./typos";
+import { HiCheck } from "react-icons/hi";
+import TaskList from './components/TaskList';
 
 
 // Component to display the "Bandeja de entrada"
-function BandejaEntrada({ tareas, addTask, removeTask }: { tareas: Task[], addTask:(task: Task)=>void, removeTask: (index:number)=>void })  {
-  
+function BandejaEntrada({ tareas, addTask, removeTask }: { tareas: Task[],
+   addTask:(task: Task)=>void, removeTask: (index:number)=>void })  {
+
   return (
         <div className='title-plus-component-button-task'>
           <div className='title-buttons-container-main'>
@@ -41,11 +44,18 @@ function BandejaEntrada({ tareas, addTask, removeTask }: { tareas: Task[], addTa
               <div>
                 <ButtonLetter tareas={tareas} addTask={addTask} removeTask={removeTask}/>
               </div>
+              <div className="task-details">
+                {/* Show description and date for tasks */}
+                {tareas.map((tarea: Task, index: number) => (
+                  <div key={index} className="task-item">
+                </div>
+              ))}
+            </div>
           </div>
         </div>
-  
   );
 }
+
 function isToday(dateToCheck: Date|undefined):boolean {
   if (dateToCheck){
     // Get the current date
@@ -64,11 +74,25 @@ function isToday(dateToCheck: Date|undefined):boolean {
 
 // Component to display the date "Hoy"
 
-function Hoy({ tareas }: { tareas: Task[] })  {
+function Hoy({ tareas, removeTask }: { tareas: Task[], removeTask:(index:number)=>void })  {
   const fechaHoy = new Date().toLocaleDateString(); // Replace with my logic to get the date
   const tareasHoy = tareas.filter((tarea) => isToday(tarea.due_date));
 
-
+  // Ordenar las tareas por prioridad (P1 primero)
+  tareasHoy.sort((a, b) => {
+    const priorityOrder = {
+      [Priority.Priority1]: 1,
+      [Priority.Priority2]: 2,
+      [Priority.Priority3]: 3,
+      [Priority.Priority4]: 4,
+    };
+    // Manejo de casos donde tarea.priority es undefined
+    return (
+      priorityOrder[a.priority || Priority.Priority4] -
+      priorityOrder[b.priority || Priority.Priority4]
+    );
+  });
+  
   return (
 
     <div className='title-plus-component-button-task'>
@@ -81,16 +105,29 @@ function Hoy({ tareas }: { tareas: Task[] })  {
         <button className='three-alternatives-icons'>&nbsp;<TbAdjustmentsHorizontal className='alternative-icon'/>&nbsp;&nbsp;Vista&nbsp;</button>&nbsp;&nbsp;
       </div>
     </div> 
-    <div className='component-button-task'> 
-      <div>
-        <h3>Tareas</h3>
-        <ul>
-        {tareasHoy.map((tarea: Task, index: number) => (
-          <li key={index} className="task-item">
-            {tarea.name}
-          </li>
-        ))}
-      </ul>
+    <div className='component-button-task-2'> 
+      <div className="pre-component-task-item">
+        <h3>Tareas para Hoy</h3>
+          <ul>
+          <TaskList tareas={tareasHoy}  removeTask={removeTask}></TaskList>
+          {tareasHoy.map((tarea: Task, index: number) => (
+              <li key={index} className="task-item-2">
+              {/* Enumerar la lista */}
+              <div className="item-task-2a">
+                <span className="task-number" style={{ color: "#db4c3f" }}>{index + 1}.</span>
+                &nbsp;&nbsp;{tarea.name}
+              </div>
+              <div className="item-task-2b"><HiCheck className="HiCheck-b"/>{tarea.description}</div>
+              <div className="item-task-2c">
+                <HiCheck className="HiCheck-b"/>
+                {/* Mostrar el nombre de la prioridad en lugar de P1, P2, etc. */}
+                {tarea.priority === Priority.Priority1 ? 'Prioridad 1' :
+                     tarea.priority === Priority.Priority2 ? 'Prioridad 2' :
+                     tarea.priority === Priority.Priority3 ? 'Prioridad 3' :
+                     tarea.priority === Priority.Priority4 ? 'Prioridad 4' : ''}
+                </div>            </li>
+          ))}
+        </ul>
       </div>
     </div>
   </div>
@@ -121,8 +158,6 @@ function isNextSunday(dateToCheck: Date | undefined) {
   }
 }
 
-
-
 // Component to display the date "próximo"
 
 function Proximo({ tareas }: { tareas: Task[] }) {
@@ -141,6 +176,21 @@ function Proximo({ tareas }: { tareas: Task[] }) {
 
   const tareasProximoDomingo = tareas.filter((tarea: Task) => isNextSunday(tarea.due_date) );
 
+  // Ordenar las tareas por prioridad (P1 primero)
+  tareasProximoDomingo.sort((a, b) => {
+    const priorityOrder = {
+      [Priority.Priority1]: 1,
+      [Priority.Priority2]: 2,
+      [Priority.Priority3]: 3,
+      [Priority.Priority4]: 4,
+    };
+    // Manejo de casos donde tarea.priority es undefined
+    return (
+      priorityOrder[a.priority || Priority.Priority4] -
+      priorityOrder[b.priority || Priority.Priority4]
+    );
+  });
+
   return (
     <div className='title-plus-component-button-task'>
       <div className='title-buttons-container-main'>
@@ -152,16 +202,29 @@ function Proximo({ tareas }: { tareas: Task[] }) {
           <button className='three-alternatives-icons'>&nbsp;<TbAdjustmentsHorizontal className='alternative-icon'/>&nbsp;&nbsp;Vista&nbsp;</button>&nbsp;&nbsp;
         </div>
       </div>
-      <div className='component-button-task'>
-        <div>
-          <h3>Tareas</h3>
-          <ul>
-            {tareasProximoDomingo.map((tarea: Task, index: number) => (
-              <li key={index} className="task-item">
-                {tarea.name}
-              </li>
-            ))}
-          </ul>
+      <div className='component-button-task-2'>
+        <div className="pre-component-task-item">
+          <h3>Tareas para el Próximo Domingo</h3>
+            <ul>
+              {tareasProximoDomingo.map((tarea: Task, index: number) => (
+              <li key={index} className="task-item-2">
+              {/* Enumerar la lista */}
+              <div className="item-task-2a">
+                <span className="task-number" style={{ color: "#db4c3f" }}>{index + 1}.</span>
+                &nbsp;&nbsp;{tarea.name}
+              </div>
+              <div className="item-task-2b"><HiCheck className="HiCheck-b"/>{tarea.description}</div>
+              <div className="item-task-2c">
+                <HiCheck className="HiCheck-b"/>
+                {/* Mostrar el nombre de la prioridad en lugar de P1, P2, etc. */}
+                {tarea.priority === Priority.Priority1 ? 'Prioridad 1' :
+                     tarea.priority === Priority.Priority2 ? 'Prioridad 2' :
+                     tarea.priority === Priority.Priority3 ? 'Prioridad 3' :
+                     tarea.priority === Priority.Priority4 ? 'Prioridad 4' : ''}
+                </div>
+            </li>
+              ))}
+            </ul>
         </div>
       </div>
     </div>
@@ -246,7 +309,7 @@ function App() {
                   path="/bandeja-de-entrada"
                   element={<BandejaEntrada tareas={tareas} addTask={addTask} removeTask={removeTask}/>}
                 />
-                <Route path="/hoy" element={<Hoy tareas={tareas}/>} />
+                <Route path="/hoy" element={<Hoy tareas={tareas} removeTask={removeTask}/>} />
                 <Route path="/proximo" element={<Proximo tareas={tareas}/>} /> 
                 <Route path="/filtros-y-etiquetas" element={<FiltrosEtiquetas />} />
                 {/* Add similar routes for other components */}
