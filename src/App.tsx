@@ -18,14 +18,13 @@ import { HiOutlineSquares2X2 } from "react-icons/hi2";
 import { GoKebabHorizontal } from "react-icons/go";
 import { FaRegClipboard } from "react-icons/fa";
 import { FaRegCheckSquare } from "react-icons/fa";
-import { Task, Priority} from "./typos";
-import { HiCheck } from "react-icons/hi";
+import { Task} from "./typos";
 import TaskList from './components/TaskList';
-
+import { v4 as uuidv4 } from 'uuid';
 
 // Component to display the "Bandeja de entrada"
 function BandejaEntrada({ tareas, addTask, removeTask }: { tareas: Task[],
-   addTask:(task: Task)=>void, removeTask: (index:number)=>void })  {
+   addTask:(task: Task)=>void, removeTask: (id:string)=>void })  {
 
   return (
         <div className='title-plus-component-button-task'>
@@ -74,24 +73,9 @@ function isToday(dateToCheck: Date|undefined):boolean {
 
 // Component to display the date "Hoy"
 
-function Hoy({ tareas, removeTask }: { tareas: Task[], removeTask:(index:number)=>void })  {
+function Hoy({ tareas, removeTask }: { tareas: Task[], removeTask:(id:string)=>void })  {
   const fechaHoy = new Date().toLocaleDateString(); // Replace with my logic to get the date
   const tareasHoy = tareas.filter((tarea) => isToday(tarea.due_date));
-
-  // Ordenar las tareas por prioridad (P1 primero)
-  tareasHoy.sort((a, b) => {
-    const priorityOrder = {
-      [Priority.Priority1]: 1,
-      [Priority.Priority2]: 2,
-      [Priority.Priority3]: 3,
-      [Priority.Priority4]: 4,
-    };
-    // Manejo de casos donde tarea.priority es undefined
-    return (
-      priorityOrder[a.priority || Priority.Priority4] -
-      priorityOrder[b.priority || Priority.Priority4]
-    );
-  });
   
   return (
 
@@ -110,24 +94,7 @@ function Hoy({ tareas, removeTask }: { tareas: Task[], removeTask:(index:number)
         <h3>Tareas para Hoy</h3>
           <ul>
           <TaskList tareas={tareasHoy}  removeTask={removeTask}></TaskList>
-          {tareasHoy.map((tarea: Task, index: number) => (
-              <li key={index} className="task-item-2">
-              {/* Enumerar la lista */}
-              <div className="item-task-2a">
-                <span className="task-number" style={{ color: "#db4c3f" }}>{index + 1}.</span>
-                &nbsp;&nbsp;{tarea.name}
-              </div>
-              <div className="item-task-2b"><HiCheck className="HiCheck-b"/>{tarea.description}</div>
-              <div className="item-task-2c">
-                <HiCheck className="HiCheck-b"/>
-                {/* Mostrar el nombre de la prioridad en lugar de P1, P2, etc. */}
-                {tarea.priority === Priority.Priority1 ? 'Prioridad 1' :
-                     tarea.priority === Priority.Priority2 ? 'Prioridad 2' :
-                     tarea.priority === Priority.Priority3 ? 'Prioridad 3' :
-                     tarea.priority === Priority.Priority4 ? 'Prioridad 4' : ''}
-                </div>            </li>
-          ))}
-        </ul>
+          </ul>
       </div>
     </div>
   </div>
@@ -173,23 +140,11 @@ function Proximo({ tareas }: { tareas: Task[] }) {
 
   // Formatear la fecha del próximo domingo como una cadena legible
   const fechaProximoDomingo = proximoDomingo.toLocaleDateString();
-
   const tareasProximoDomingo = tareas.filter((tarea: Task) => isNextSunday(tarea.due_date) );
 
-  // Ordenar las tareas por prioridad (P1 primero)
-  tareasProximoDomingo.sort((a, b) => {
-    const priorityOrder = {
-      [Priority.Priority1]: 1,
-      [Priority.Priority2]: 2,
-      [Priority.Priority3]: 3,
-      [Priority.Priority4]: 4,
-    };
-    // Manejo de casos donde tarea.priority es undefined
-    return (
-      priorityOrder[a.priority || Priority.Priority4] -
-      priorityOrder[b.priority || Priority.Priority4]
-    );
-  });
+  function removeTask(id: string): void {
+    throw new Error("Function not implemented.");
+  }
 
   return (
     <div className='title-plus-component-button-task'>
@@ -206,24 +161,7 @@ function Proximo({ tareas }: { tareas: Task[] }) {
         <div className="pre-component-task-item">
           <h3>Tareas para el Próximo Domingo</h3>
             <ul>
-              {tareasProximoDomingo.map((tarea: Task, index: number) => (
-              <li key={index} className="task-item-2">
-              {/* Enumerar la lista */}
-              <div className="item-task-2a">
-                <span className="task-number" style={{ color: "#db4c3f" }}>{index + 1}.</span>
-                &nbsp;&nbsp;{tarea.name}
-              </div>
-              <div className="item-task-2b"><HiCheck className="HiCheck-b"/>{tarea.description}</div>
-              <div className="item-task-2c">
-                <HiCheck className="HiCheck-b"/>
-                {/* Mostrar el nombre de la prioridad en lugar de P1, P2, etc. */}
-                {tarea.priority === Priority.Priority1 ? 'Prioridad 1' :
-                     tarea.priority === Priority.Priority2 ? 'Prioridad 2' :
-                     tarea.priority === Priority.Priority3 ? 'Prioridad 3' :
-                     tarea.priority === Priority.Priority4 ? 'Prioridad 4' : ''}
-                </div>
-            </li>
-              ))}
+            <TaskList tareas={tareasProximoDomingo}  removeTask={removeTask}></TaskList>
             </ul>
         </div>
       </div>
@@ -257,21 +195,23 @@ function Proximo({ tareas }: { tareas: Task[] }) {
     );
   }
 
-
 function App() {
+  
   
   // Example: I'm gonna say that I have a list of tasks with dates in my local state
   const [tareas, setTareas] = useState<Task[]>([]);
-  const addTask = (task:Task) => {
+  const addTask = (task: Task) => {
     if (task.name.trim() !== '') {
+      task.id = uuidv4(); // Generar un ID único para la nueva tarea
       setTareas(tareas.concat([task]));
     }
   };
 
-  const removeTask = (index: number) => {
-    const updatedTextAdd = tareas.filter((_, i) => i !== index);
-    setTareas(updatedTextAdd);
+  const removeTask = (id: string) => {
+    const updatedTasks = tareas.filter(task => task.id !== id);
+    setTareas(updatedTasks);
   };
+  
 
   return (
     
@@ -323,6 +263,10 @@ function App() {
 }
 
 export default App; 
+
+
+
+
 
 /* ---> SEPTIMA SOLUCION <----
 

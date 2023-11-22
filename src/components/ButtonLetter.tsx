@@ -12,6 +12,7 @@ import { Priority, Task } from '../typos';
 import AddTask from './AddTask';
 import { id } from 'date-fns/locale';
 import TaskList from './TaskList';
+import { v4 as uuidv4 } from 'uuid';
 
 function get_class(p: Priority):string {
   switch (p) {
@@ -29,10 +30,11 @@ function get_class(p: Priority):string {
 interface ButtonLetterProps{
   tareas:Task[],
   addTask:(task: Task)=>void,
-  removeTask: (index:number)=>void
+  removeTask: (id:string)=>void
 }
+
 const ButtonLetter = (props: ButtonLetterProps) => {
-  const [task, setTask] = useState<Task>({name: "", description:""});
+  const [task, setTask] = useState<Task>({name: "", description:"", id:""});
   //const [textAdd, setTextAdd] = useState<Task[]>([]);
 
   const handleInputChange = (event: { target: { value: string } }) => {
@@ -54,13 +56,23 @@ const ButtonLetter = (props: ButtonLetterProps) => {
   const handleAddTask = () => {
     if (task.name.trim() !== '') {
       props.addTask(task);
-      setTask({name: "", description:""});
+      
+      setTask({name: "", description:"", id: ""});
     }
   };
 
-  const handleRemoveTask = (index: number) => {
-     props.removeTask(index)
+  const handleRemoveTask = (index: number) => {    
+    props.removeTask(props.tareas[index].id);
   };
+
+  const addTask = (newTask: Task) => {
+    if (newTask.name.trim() !== '') {
+      const taskWithId = { ...newTask, id: uuidv4()  }; // Asignar un ID único como string
+      props.addTask(taskWithId);
+      setTask({ name: '', description: '', id: '' }); // Limpiar los campos después de añadir la tarea
+    }
+  };
+  
 
   const isButtonActive = task.name.trim() !== '';
 
@@ -155,6 +167,10 @@ export default ButtonLetter;
 
 
 
+
+/*function uuidv4() {
+  throw new Error('Function not implemented.');
+}*/
 /*  ---> QUINTA SOLUCION <---- 
 
 import React, { useState } from 'react';

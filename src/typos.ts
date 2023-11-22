@@ -10,5 +10,6 @@ export enum Priority{
     name: string,
     description: string,
     priority?: Priority,
-    due_date?: Date
+    due_date?: Date,
+    id: string
   }
