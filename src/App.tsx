@@ -21,6 +21,7 @@ import { FaRegCheckSquare } from "react-icons/fa";
 import { Task} from "./typos";
 import TaskList from './components/TaskList';
 import { v4 as uuidv4 } from 'uuid';
+import { BiLeaf } from "react-icons/bi";
 
 // Component to display the "Bandeja de entrada"
 function BandejaEntrada({ tareas, addTask, removeTask }: { tareas: Task[],
@@ -127,7 +128,7 @@ function isNextSunday(dateToCheck: Date | undefined) {
 
 // Component to display the date "próximo"
 
-function Proximo({ tareas }: { tareas: Task[] }) {
+function Proximo({ tareas, removeTask }: { tareas: Task[], removeTask:(id:string)=>void })  {
   const hoy = new Date(); // Obtener la fecha de hoy
   const diaSemana = hoy.getDay(); // Obtener el día de la semana (0 = domingo, 1 = lunes, ..., 6 = sábado)
 
@@ -142,9 +143,10 @@ function Proximo({ tareas }: { tareas: Task[] }) {
   const fechaProximoDomingo = proximoDomingo.toLocaleDateString();
   const tareasProximoDomingo = tareas.filter((tarea: Task) => isNextSunday(tarea.due_date) );
 
-  function removeTask(id: string): void {
+  /*
+  function removeTask2(id: string): void {
     throw new Error("Function not implemented.");
-  }
+  }*/
 
   return (
     <div className='title-plus-component-button-task'>
@@ -161,11 +163,36 @@ function Proximo({ tareas }: { tareas: Task[] }) {
         <div className="pre-component-task-item">
           <h3>Tareas para el Próximo Domingo</h3>
             <ul>
-            <TaskList tareas={tareasProximoDomingo}  removeTask={removeTask}></TaskList>
+            <TaskList tareas={tareasProximoDomingo} removeTask={removeTask}></TaskList>
             </ul>
         </div>
       </div>
     </div>
+  );
+}
+
+  // Component to display "Tareas Realizadas", task done!
+function TareasRealizadas({tareasRealizadas,restoreTask,}: {tareasRealizadas: Task[];restoreTask: (id: string) => void;}) {
+  const tareasRealizadas2 = "Filtros y etiquetas :D"; // Replace with my logic to get what I want to be displayed
+  return (
+
+    <div className='title-plus-component-button-task'>
+    <div className='title-buttons-container-main'>
+      <div className='text-main-title'>
+        <div className='title-buttons'>Tareas Realizadas
+        </div>
+      </div>
+      <div className='title-buttons-icon'>
+        <button className='three-alternatives-icons'>&nbsp;<TbAdjustmentsHorizontal className='alternative-icon'/>&nbsp;&nbsp;Vista&nbsp;</button>&nbsp;&nbsp;
+      </div>
+    </div> 
+    <div className='component-button-task-2'> 
+      <div className="pre-component-task-item">
+        <h3>Tareas Realizadas</h3>
+        <TaskList tareas={tareasRealizadas} removeTask={restoreTask} />
+      </div>
+    </div>
+  </div>
   );
 }
 
@@ -194,27 +221,56 @@ function Proximo({ tareas }: { tareas: Task[] }) {
     </div>
     );
   }
-
-function App() {
   
+function App() {
   
   // Example: I'm gonna say that I have a list of tasks with dates in my local state
   const [tareas, setTareas] = useState<Task[]>([]);
+  const [tareasRealizadas, setTareasRealizadas] = useState<Task[]>([]);
+  
   const addTask = (task: Task) => {
     if (task.name.trim() !== '') {
       task.id = uuidv4(); // Generar un ID único para la nueva tarea
       setTareas(tareas.concat([task]));
+      // Guardar tareas actualizadas en el Local Storage
+    localStorage.setItem('tareas', JSON.stringify(tareas.concat([task])));
     }
   };
 
   const removeTask = (id: string) => {
-    const updatedTasks = tareas.filter(task => task.id !== id);
-    setTareas(updatedTasks);
+    const taskToRemove = tareas.find(task => task.id === id);
+    if (taskToRemove) {
+      const updatedTasks = tareas.filter(task => task.id !== id);
+      setTareas(updatedTasks);
+      setTareasRealizadas([...tareasRealizadas, taskToRemove]); // Agregar tarea eliminada a tareas realizadas
+    
+    // Guardar tareas actualizadas en el Local Storage
+    localStorage.setItem('tareas', JSON.stringify(updatedTasks));
+    }
   };
+
+  //restaurar tarea eliminada y de TareasRealizadas
+  const restoreTask = (id: string) => {
+    const taskToRestore = tareasRealizadas.find((task) => task.id === id);
+    if (taskToRestore) {
+      const updatedTasks = tareas.filter((task) => task.id !== id);
+      setTareas([...updatedTasks, taskToRestore]);
+      const updatedCompletedTasks = tareasRealizadas.filter(
+        (task) => task.id !== id
+      );
+      setTareasRealizadas(updatedCompletedTasks);
+    }
+  };
+
+  useEffect(() => {
+    // Recuperar tareas guardadas en el Local Storage al cargar la página
+    const storedTareas = JSON.parse(localStorage.getItem('tareas') || '[]');
+    console.log('Tareas recuperadas:', storedTareas);
+    setTareas(storedTareas);
+  }, []);
   
 
   return (
-    
     <Router>
       <div className="App">
         <header className="App-header">
@@ -224,18 +280,25 @@ function App() {
           <div className='menu-plus-options'>
             <div className='container-menu-main'>
                 <Link to="/bandeja-de-entrada" className="link-bandeja-entrada">
-                  <GoInbox className='alternative-icon-a'/>&nbsp;&nbsp;Bandeja de entrada
+                  <button className='menu-four-alternatives-icons'>
+                <GoInbox className='alternative-icon-a'/>&nbsp;&nbsp;Bandeja de entrada
+                 </button>
                 </Link>
                 <Link to="/hoy" className="link-hoy">
-                <button className='menu-four-alternatives-icons'>
-                  <FaRegCheckSquare className='alternative-icon-b'/>&nbsp;&nbsp;Hoy
+                  <button className='menu-four-alternatives-icons'>
+                <BiLeaf className='alternative-icon-hoy'/>&nbsp;&nbsp;Hoy
                   </button>
                 </Link>
-              <button className='menu-four-alternatives-icons'>
+                  <button className='menu-four-alternatives-icons'>
                 <Link to="/proximo" className="link-proximo">
                   <TbAdjustmentsHorizontal className='alternative-icon-c'/>&nbsp;&nbsp;Próximo domingo
                 </Link>
-              </button>
+                  </button>
+                  <button className='menu-four-alternatives-icons'>
+                <Link to="/tareas-realizadas" className="link-bandeja-entrada">
+                <FaRegCheckSquare className='alternative-icon-b'/>&nbsp;&nbsp;Tareas Realizadas
+                </Link>
+                  </button>
               <button className='menu-four-alternatives-icons'>
                 <Link to="/filtros-y-etiquetas" className="link-bandeja-entrada">
                 <HiOutlineSquares2X2 className='alternative-icon-d'/>&nbsp;&nbsp;Filtros y etiquetas
@@ -250,7 +313,13 @@ function App() {
                   element={<BandejaEntrada tareas={tareas} addTask={addTask} removeTask={removeTask}/>}
                 />
                 <Route path="/hoy" element={<Hoy tareas={tareas} removeTask={removeTask}/>} />
-                <Route path="/proximo" element={<Proximo tareas={tareas}/>} /> 
+                <Route path="/proximo" element={<Proximo tareas={tareas} removeTask={removeTask}/>} /> 
+                <Route path="/tareas-realizadas" element={
+                    <TareasRealizadas
+                      tareasRealizadas={tareasRealizadas}
+                      restoreTask={restoreTask}
+                    />
+                  } />
                 <Route path="/filtros-y-etiquetas" element={<FiltrosEtiquetas />} />
                 {/* Add similar routes for other components */}
               </Routes>
@@ -263,9 +332,6 @@ function App() {
 }
 
 export default App; 
-
-
-
 
 
 /* ---> SEPTIMA SOLUCION <----

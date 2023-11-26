@@ -24,7 +24,7 @@
 
 .menu-four-alternatives-icons{
     cursor: pointer;
-    color: rgb(139, 133, 133);
+    color: rgb(54, 53, 53);
     background-color: #fafafa;
     font-size: 2.2vh;
     height: 40px;
@@ -112,6 +112,11 @@
 .alternative-icon-a{
     font-size: 3vh;
     color: #246fe0;
+}
+
+.alternative-icon-hoy{
+    font-size: 3vh;
+    color: #da24e0;
 }
 
 .alternative-icon-b{

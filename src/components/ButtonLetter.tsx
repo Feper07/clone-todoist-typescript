@@ -56,7 +56,6 @@ const ButtonLetter = (props: ButtonLetterProps) => {
   const handleAddTask = () => {
     if (task.name.trim() !== '') {
       props.addTask(task);
-      
       setTask({name: "", description:"", id: ""});
     }
   };
@@ -73,7 +72,6 @@ const ButtonLetter = (props: ButtonLetterProps) => {
     }
   };
   
-
   const isButtonActive = task.name.trim() !== '';
 
   function formatDueDate(dueDate: Date | string | undefined): string | null {

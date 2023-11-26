@@ -25,6 +25,7 @@ function get_class(p: Priority):string {
        return "remove-button-priority4"
     }
   }
+  
 function TaskList(props:{tareas: Task[], removeTask:(id: string)=>void }){
     const handleRemoveTask = (id: string) => {
       props.removeTask(id)
