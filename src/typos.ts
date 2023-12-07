@@ -7,9 +7,12 @@ export enum Priority{
   
   //Type for task list
   export interface Task{
+    completed: true| false;
     name: string,
     description: string,
     priority?: Priority,
     due_date?: Date,
-    id: string
+    id: string,
+    done: true| false 
+    
   }

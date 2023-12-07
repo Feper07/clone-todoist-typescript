@@ -34,7 +34,8 @@ interface ButtonLetterProps{
 }
 
 const ButtonLetter = (props: ButtonLetterProps) => {
-  const [task, setTask] = useState<Task>({name: "", description:"", id:""});
+  
+  const [task, setTask] = useState<Task>({name: "", description:"", id:"", done: false, completed: false});
   //const [textAdd, setTextAdd] = useState<Task[]>([]);
 
   const handleInputChange = (event: { target: { value: string } }) => {
@@ -56,7 +57,7 @@ const ButtonLetter = (props: ButtonLetterProps) => {
   const handleAddTask = () => {
     if (task.name.trim() !== '') {
       props.addTask(task);
-      setTask({name: "", description:"", id: ""});
+      setTask({name: "", description:"", id: "", done: false, completed: false});
     }
   };
 
@@ -68,7 +69,7 @@ const ButtonLetter = (props: ButtonLetterProps) => {
     if (newTask.name.trim() !== '') {
       const taskWithId = { ...newTask, id: uuidv4()  }; // Asignar un ID único como string
       props.addTask(taskWithId);
-      setTask({ name: '', description: '', id: '' }); // Limpiar los campos después de añadir la tarea
+      setTask({ name: '', description: '', id: '', done: false, completed: false }); // Limpiar los campos después de añadir la tarea
     }
   };
   
@@ -124,7 +125,7 @@ const ButtonLetter = (props: ButtonLetterProps) => {
   
   return (
     <div className="ButtonLetter-main">
-      <TaskList tareas={props.tareas} removeTask={props.removeTask}></TaskList>      
+      <TaskList tareas={props.tareas.filter((tarea)=>tarea.done==false)} removeTask={props.removeTask}></TaskList>      
       <div>
         <input
           className="input-calendar-a"

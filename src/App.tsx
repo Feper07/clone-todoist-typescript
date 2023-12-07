@@ -1,4 +1,3 @@
-
 import { BrowserRouter as Router, Route, Routes, Link, Outlet } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
@@ -56,8 +55,9 @@ function BandejaEntrada({ tareas, addTask, removeTask }: { tareas: Task[],
   );
 }
 
-function isToday(dateToCheck: Date|undefined):boolean {
-  if (dateToCheck){
+function isToday(input: Date|string|undefined):boolean {
+  if (input){
+    const dateToCheck = new Date(input);
     // Get the current date
     const currentDate = new Date();
 
@@ -76,8 +76,7 @@ function isToday(dateToCheck: Date|undefined):boolean {
 
 function Hoy({ tareas, removeTask }: { tareas: Task[], removeTask:(id:string)=>void })  {
   const fechaHoy = new Date().toLocaleDateString(); // Replace with my logic to get the date
-  const tareasHoy = tareas.filter((tarea) => isToday(tarea.due_date));
-  
+  const tareasHoy = tareas.filter((tarea) => tarea.done==false).filter((tarea) => isToday(tarea.due_date));
   return (
 
     <div className='title-plus-component-button-task'>
@@ -104,8 +103,9 @@ function Hoy({ tareas, removeTask }: { tareas: Task[], removeTask:(id:string)=>v
 
 //funtion
 
-function isNextSunday(dateToCheck: Date | undefined) {
-  if (dateToCheck) {
+function isNextSunday(input: Date | undefined) {
+  if (input) {
+    const dateToCheck = new Date(input)
     const today = new Date();
     const dayOfWeek = today.getDay(); // 0 = domingo, 1 = lunes, ..., 6 = sábado
     const daysUntilNextSunday = 7 - dayOfWeek;
@@ -126,6 +126,7 @@ function isNextSunday(dateToCheck: Date | undefined) {
   }
 }
 
+
 // Component to display the date "próximo"
 
 function Proximo({ tareas, removeTask }: { tareas: Task[], removeTask:(id:string)=>void })  {
@@ -141,7 +142,7 @@ function Proximo({ tareas, removeTask }: { tareas: Task[], removeTask:(id:string
 
   // Formatear la fecha del próximo domingo como una cadena legible
   const fechaProximoDomingo = proximoDomingo.toLocaleDateString();
-  const tareasProximoDomingo = tareas.filter((tarea: Task) => isNextSunday(tarea.due_date) );
+  const tareasProximoDomingo = tareas.filter((tarea) => tarea.done==false).filter((tarea) => isNextSunday(tarea.due_date));
 
   /*
   function removeTask2(id: string): void {
@@ -172,8 +173,8 @@ function Proximo({ tareas, removeTask }: { tareas: Task[], removeTask:(id:string
 }
 
   // Component to display "Tareas Realizadas", task done!
-function TareasRealizadas({tareasRealizadas,restoreTask,}: {tareasRealizadas: Task[];restoreTask: (id: string) => void;}) {
-  const tareasRealizadas2 = "Filtros y etiquetas :D"; // Replace with my logic to get what I want to be displayed
+function TareasRealizadas({ removeTask, tareas }: { tareas: Task[]; removeTask: (id: string) => void; }) {
+
   return (
 
     <div className='title-plus-component-button-task'>
@@ -189,7 +190,7 @@ function TareasRealizadas({tareasRealizadas,restoreTask,}: {tareasRealizadas: Ta
     <div className='component-button-task-2'> 
       <div className="pre-component-task-item">
         <h3>Tareas Realizadas</h3>
-        <TaskList tareas={tareasRealizadas} removeTask={restoreTask} />
+        <TaskList tareas={tareas.filter((tarea)=>tarea.done==true)} removeTask={removeTask}></TaskList>
       </div>
     </div>
   </div>
@@ -226,46 +227,37 @@ function App() {
   
   // Example: I'm gonna say that I have a list of tasks with dates in my local state
   const [tareas, setTareas] = useState<Task[]>([]);
-  const [tareasRealizadas, setTareasRealizadas] = useState<Task[]>([]);
-  
+
   const addTask = (task: Task) => {
     if (task.name.trim() !== '') {
       task.id = uuidv4(); // Generar un ID único para la nueva tarea
-      setTareas(tareas.concat([task]));
+      const updatedTasks = [...tareas, task];
+      setTareas(updatedTasks);
       // Guardar tareas actualizadas en el Local Storage
-    localStorage.setItem('tareas', JSON.stringify(tareas.concat([task])));
+      localStorage.setItem('tareas', JSON.stringify(updatedTasks));
     }
   };
 
   const removeTask = (id: string) => {
-    const taskToRemove = tareas.find(task => task.id === id);
-    if (taskToRemove) {
-      const updatedTasks = tareas.filter(task => task.id !== id);
-      setTareas(updatedTasks);
-      setTareasRealizadas([...tareasRealizadas, taskToRemove]); // Agregar tarea eliminada a tareas realizadas
-    
+    const updatedTasks:Task[] = tareas.map(task => {
+      if(task.id == id){
+        if(task.done == true){
+          task.done = false
+        }else{
+          task.done = true;
+        }
+      }
+      return task
+    });
+  
+    setTareas(updatedTasks);
     // Guardar tareas actualizadas en el Local Storage
     localStorage.setItem('tareas', JSON.stringify(updatedTasks));
-    }
-  };
-
-  //restaurar tarea eliminada y de TareasRealizadas
-  const restoreTask = (id: string) => {
-    const taskToRestore = tareasRealizadas.find((task) => task.id === id);
-    if (taskToRestore) {
-      const updatedTasks = tareas.filter((task) => task.id !== id);
-      setTareas([...updatedTasks, taskToRestore]);
-      const updatedCompletedTasks = tareasRealizadas.filter(
-        (task) => task.id !== id
-      );
-      setTareasRealizadas(updatedCompletedTasks);
-    }
   };
 
   useEffect(() => {
     // Recuperar tareas guardadas en el Local Storage al cargar la página
     const storedTareas = JSON.parse(localStorage.getItem('tareas') || '[]');
-    console.log('Tareas recuperadas:', storedTareas);
     setTareas(storedTareas);
   }, []);
   
@@ -312,14 +304,12 @@ function App() {
                   path="/bandeja-de-entrada"
                   element={<BandejaEntrada tareas={tareas} addTask={addTask} removeTask={removeTask}/>}
                 />
-                <Route path="/hoy" element={<Hoy tareas={tareas} removeTask={removeTask}/>} />
-                <Route path="/proximo" element={<Proximo tareas={tareas} removeTask={removeTask}/>} /> 
-                <Route path="/tareas-realizadas" element={
-                    <TareasRealizadas
-                      tareasRealizadas={tareasRealizadas}
-                      restoreTask={restoreTask}
-                    />
-                  } />
+                <Route path="/hoy" element={<Hoy tareas={tareas} removeTask={removeTask} />} />
+                
+                <Route path="/proximo" element={<Proximo tareas={tareas} removeTask={removeTask} />} /> 
+                
+                <Route path="/tareas-realizadas" element={<TareasRealizadas tareas={tareas} removeTask={removeTask} />} />
+                
                 <Route path="/filtros-y-etiquetas" element={<FiltrosEtiquetas />} />
                 {/* Add similar routes for other components */}
               </Routes>
@@ -331,7 +321,9 @@ function App() {
   );
 }
 
-export default App; 
+export default App;
+
+
 
 
 /* ---> SEPTIMA SOLUCION <----
