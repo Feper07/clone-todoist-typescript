@@ -31,6 +31,10 @@
 
 .component-remove-button{
     height: 90px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .remove-button{
@@ -88,4 +92,14 @@
     font-size: 1.8vh;
 }
 
-
+.delete-task-button{
+    color: #db4c3f;
+    background-color: white;
+    cursor: pointer;
+    border: none;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.1vh;
+}

@@ -30,7 +30,8 @@ function get_class(p: Priority):string {
 interface ButtonLetterProps{
   tareas:Task[],
   addTask:(task: Task)=>void,
-  removeTask: (id:string)=>void
+  removeTask: (id:string)=>void,
+  toggleTask:  (id:string)=>void,
 }
 
 const ButtonLetter = (props: ButtonLetterProps) => {
@@ -125,7 +126,7 @@ const ButtonLetter = (props: ButtonLetterProps) => {
   
   return (
     <div className="ButtonLetter-main">
-      <TaskList tareas={props.tareas.filter((tarea)=>tarea.done==false)} removeTask={props.removeTask}></TaskList>      
+      <TaskList tareas={props.tareas.filter((tarea)=>tarea.done==false)} removeTask={props.removeTask} toggleTask={props.toggleTask}></TaskList>      
       <div>
         <input
           className="input-calendar-a"

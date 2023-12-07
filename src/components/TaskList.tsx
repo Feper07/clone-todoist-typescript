@@ -10,6 +10,7 @@ import { HiOutlineCheckCircle } from "react-icons/hi";
 import { HiCheck } from "react-icons/hi";
 import { Priority, Task } from '../typos';
 import AddTask from './AddTask';
+import { FaRegTrashAlt } from "react-icons/fa";
 //import { id } from 'date-fns/locale';
 //import { v4 as uuidv4 } from 'uuid';
 
@@ -25,11 +26,17 @@ function get_class(p: Priority):string {
        return "remove-button-priority4"
     }
   }
-  
-function TaskList(props:{tareas: Task[], removeTask:(id: string)=>void }){
-    const handleRemoveTask = (id: string) => {
-      props.removeTask(id)
+interface TaskListProps {
+   tareas: Task[], 
+   removeTask: (id: string) => void, 
+   toggleTask: (id: string) => void, 
+   showDeleteButton?: boolean 
+}
+function TaskList(props: TaskListProps){
+    const handleToggleTask = (id: string) => {
+      props.toggleTask(id)
    };
+   
     function formatDueDate(dueDate: Date | string | undefined): string | null {
       if (!dueDate) {
         return null;
@@ -77,12 +84,23 @@ function TaskList(props:{tareas: Task[], removeTask:(id: string)=>void }){
         return ''; // Default color
       }
     }
-     return (<div className="text-task-buttonletter">
+
+
+     return (
+     <div className="text-task-buttonletter">
      {props.tareas.map((tarea) => (
        <div key={tarea.id} className="task-item">
            <div className='component-remove-button'> 
-             <button className={(["remove-button", tarea.priority?get_class(tarea.priority): ""].join(" "))} onClick={() => handleRemoveTask(tarea.id)}>
-               <HiCheck className={"remove-icon"} /></button>
+             <button className={(["remove-button", tarea.priority?get_class(tarea.priority): ""].join(" "))} onClick={() => handleToggleTask(tarea.id)}>
+               <HiCheck className={"remove-icon"} />
+            </button>
+            {/* Condición para mostrar el botón de eliminar */}
+            {props.showDeleteButton && (
+              //
+              <button onClick={() => props.removeTask(tarea.id)} className="delete-task-button">
+                <FaRegTrashAlt className='trash.delete'/>
+              </button>
+            )}
            </div>
            &nbsp;&nbsp;&nbsp;
            <div className='date-name-selected'>

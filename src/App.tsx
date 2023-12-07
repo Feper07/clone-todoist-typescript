@@ -21,10 +21,15 @@ import { Task} from "./typos";
 import TaskList from './components/TaskList';
 import { v4 as uuidv4 } from 'uuid';
 import { BiLeaf } from "react-icons/bi";
-
+interface BandejaEntradaProps {
+   tareas: Task[],
+   addTask:(task: Task)=>void, 
+   removeTask: (id:string)=>void,
+   toggleTask: (id:string)=>void,
+   
+ }
 // Component to display the "Bandeja de entrada"
-function BandejaEntrada({ tareas, addTask, removeTask }: { tareas: Task[],
-   addTask:(task: Task)=>void, removeTask: (id:string)=>void })  {
+function BandejaEntrada({ tareas, addTask, removeTask, toggleTask }: BandejaEntradaProps )  {
 
   return (
         <div className='title-plus-component-button-task'>
@@ -41,7 +46,7 @@ function BandejaEntrada({ tareas, addTask, removeTask }: { tareas: Task[],
           </div> 
           <div className='component-button-task'> 
               <div>
-                <ButtonLetter tareas={tareas} addTask={addTask} removeTask={removeTask}/>
+                <ButtonLetter tareas={tareas} addTask={addTask} removeTask={removeTask} toggleTask={toggleTask}/>
               </div>
               <div className="task-details">
                 {/* Show description and date for tasks */}
@@ -72,9 +77,14 @@ function isToday(input: Date|string|undefined):boolean {
   }
 }
 
+interface HoyProps{
+   tareas: Task[], 
+   removeTask:(id:string)=>void, 
+   toggleTask:(id:string)=>void 
+}
 // Component to display the date "Hoy"
 
-function Hoy({ tareas, removeTask }: { tareas: Task[], removeTask:(id:string)=>void })  {
+function Hoy({ tareas, removeTask, toggleTask }: HoyProps )  {
   const fechaHoy = new Date().toLocaleDateString(); // Replace with my logic to get the date
   const tareasHoy = tareas.filter((tarea) => tarea.done==false).filter((tarea) => isToday(tarea.due_date));
   return (
@@ -93,7 +103,7 @@ function Hoy({ tareas, removeTask }: { tareas: Task[], removeTask:(id:string)=>v
       <div className="pre-component-task-item">
         <h3>Tareas para Hoy</h3>
           <ul>
-          <TaskList tareas={tareasHoy}  removeTask={removeTask}></TaskList>
+          <TaskList tareas={tareasHoy}  removeTask={removeTask} toggleTask={toggleTask}></TaskList>
           </ul>
       </div>
     </div>
@@ -101,6 +111,7 @@ function Hoy({ tareas, removeTask }: { tareas: Task[], removeTask:(id:string)=>v
   );
 }
 
+//hete
 //funtion
 
 function isNextSunday(input: Date | undefined) {
@@ -126,10 +137,14 @@ function isNextSunday(input: Date | undefined) {
   }
 }
 
-
+interface ProximoProps{
+   tareas: Task[], 
+   removeTask:(id:string)=>void,
+   toggleTask:(id:string)=>void,
+}
 // Component to display the date "próximo"
 
-function Proximo({ tareas, removeTask }: { tareas: Task[], removeTask:(id:string)=>void })  {
+function Proximo({ tareas, removeTask, toggleTask }: ProximoProps)  {
   const hoy = new Date(); // Obtener la fecha de hoy
   const diaSemana = hoy.getDay(); // Obtener el día de la semana (0 = domingo, 1 = lunes, ..., 6 = sábado)
 
@@ -164,16 +179,20 @@ function Proximo({ tareas, removeTask }: { tareas: Task[], removeTask:(id:string
         <div className="pre-component-task-item">
           <h3>Tareas para el Próximo Domingo</h3>
             <ul>
-            <TaskList tareas={tareasProximoDomingo} removeTask={removeTask}></TaskList>
+            <TaskList tareas={tareasProximoDomingo} removeTask={removeTask} toggleTask={toggleTask}></TaskList>
             </ul>
         </div>
       </div>
     </div>
   );
 }
-
+interface TareasRealizadasProps{ 
+  tareas: Task[]; 
+  removeTask: (id: string) => void; 
+  toggleTask: (id: string) => void; 
+}
   // Component to display "Tareas Realizadas", task done!
-function TareasRealizadas({ removeTask, tareas }: { tareas: Task[]; removeTask: (id: string) => void; }) {
+function TareasRealizadas({ removeTask, toggleTask, tareas }:TareasRealizadasProps ) {
 
   return (
 
@@ -190,7 +209,7 @@ function TareasRealizadas({ removeTask, tareas }: { tareas: Task[]; removeTask: 
     <div className='component-button-task-2'> 
       <div className="pre-component-task-item">
         <h3>Tareas Realizadas</h3>
-        <TaskList tareas={tareas.filter((tarea)=>tarea.done==true)} removeTask={removeTask}></TaskList>
+        <TaskList tareas={tareas.filter((tarea)=>tarea.done==true)} toggleTask={toggleTask} removeTask={removeTask} showDeleteButton={true}></TaskList>
       </div>
     </div>
   </div>
@@ -237,23 +256,31 @@ function App() {
       localStorage.setItem('tareas', JSON.stringify(updatedTasks));
     }
   };
-
-  const removeTask = (id: string) => {
-    const updatedTasks:Task[] = tareas.map(task => {
-      if(task.id == id){
-        if(task.done == true){
-          task.done = false
-        }else{
+  const toggleTask = (id: string) => {
+    const updatedTasks: Task[] = tareas.map((task) => {
+      if (task.id === id) {
+        if (task.done === true) {
+          task.done = false;
+        } else {
           task.done = true;
         }
       }
-      return task
+      return task;
     });
-  
+
     setTareas(updatedTasks);
     // Guardar tareas actualizadas en el Local Storage
     localStorage.setItem('tareas', JSON.stringify(updatedTasks));
+    }
+
+  const removeTask = (id: string, isDeleteButtonClicked = false) => {
+    const updatedTasks: Task[] = tareas.filter((task) => task.id !== id);
+    setTareas(updatedTasks);
+    // Guardar tareas actualizadas en el Local Storage
+    localStorage.setItem('tareas', JSON.stringify(updatedTasks));
+   
   };
+  
 
   useEffect(() => {
     // Recuperar tareas guardadas en el Local Storage al cargar la página
@@ -302,13 +329,13 @@ function App() {
               <Routes>
                 <Route
                   path="/bandeja-de-entrada"
-                  element={<BandejaEntrada tareas={tareas} addTask={addTask} removeTask={removeTask}/>}
+                  element={<BandejaEntrada tareas={tareas} addTask={addTask} removeTask={removeTask} toggleTask={toggleTask}/>}
                 />
-                <Route path="/hoy" element={<Hoy tareas={tareas} removeTask={removeTask} />} />
+                <Route path="/hoy" element={<Hoy tareas={tareas} removeTask={removeTask} toggleTask={toggleTask}/>} />
                 
-                <Route path="/proximo" element={<Proximo tareas={tareas} removeTask={removeTask} />} /> 
+                <Route path="/proximo" element={<Proximo tareas={tareas} removeTask={removeTask} toggleTask={toggleTask}/>} /> 
                 
-                <Route path="/tareas-realizadas" element={<TareasRealizadas tareas={tareas} removeTask={removeTask} />} />
+                <Route path="/tareas-realizadas" element={<TareasRealizadas toggleTask={toggleTask} tareas={tareas} removeTask={removeTask} />} />
                 
                 <Route path="/filtros-y-etiquetas" element={<FiltrosEtiquetas />} />
                 {/* Add similar routes for other components */}

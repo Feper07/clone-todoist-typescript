@@ -27,8 +27,9 @@ function ReminderButton() {
 
   return (
     <div className="reminder-main" ref={containerRef}>
-      <button className='button-reminder' onClick={toggleOpciones}>        <CiClock1 className='icon-lok' />&nbsp;&nbsp;Recordatorios&nbsp;<div className='pro'>PRO</div>
-
+      <button className='button-reminder' onClick={toggleOpciones}>        
+      <CiClock1 className='icon-lok' />&nbsp;&nbsp;Recordatorios&nbsp;
+        <div className='pro'>PRO</div>
       </button>
       {showOptions && (
         <div className='reminder-options'>

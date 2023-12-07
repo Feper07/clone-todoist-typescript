@@ -39,7 +39,7 @@ const EtcButtonOptions = () => {
           <button onClick={() => handleOpcionClick('label')}>
             <div className='bstag-out'>
               <div className='bstag-in'><CiChat1 className='icon-etc'/></div>
-               <div className='text-a'>Etiquetas</div>
+               <div className='text-a'>Acciones</div>
             </div>
             <div className='text-a'>@&nbsp;</div>
          </button>
