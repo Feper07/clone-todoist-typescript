@@ -33,7 +33,8 @@ const EtcButtonOptions = () => {
 
   return (
     <div className='select-options' ref={containerRef}>
-      <button className='etc-button-last' onClick={toggleOpciones}><GoKebabHorizontal/></button>
+      <button className='etc-button-last' onClick={toggleOpciones}><GoKebabHorizontal/>
+      </button>
       {showOptions && (
         <div className='etc-options'>
           <button onClick={() => handleOpcionClick('label')}>

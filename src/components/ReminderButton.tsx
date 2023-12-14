@@ -10,7 +10,7 @@ function ReminderButton() {
   const toggleOpciones = () => {
     setShowOptions(!showOptions);
   };
-
+ 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (containerRef.current && !containerRef.current.contains(event.target as Node)) {

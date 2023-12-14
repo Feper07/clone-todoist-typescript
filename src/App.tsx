@@ -21,13 +21,71 @@ import { Task} from "./typos";
 import TaskList from './components/TaskList';
 import { v4 as uuidv4 } from 'uuid';
 import { BiLeaf } from "react-icons/bi";
+import { AiFillPlusCircle } from "react-icons/ai";
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
+
+
 interface BandejaEntradaProps {
    tareas: Task[],
    addTask:(task: Task)=>void, 
    removeTask: (id:string)=>void,
    toggleTask: (id:string)=>void,
-   
  }
+
+ interface ModalComponentProps {
+  tareas: Task[],
+  addTask:(task: Task)=>void, 
+  removeTask: (id:string)=>void,
+  toggleTask: (id:string)=>void,
+  show?: boolean | undefined;
+  onHide: ()=> void,
+}
+
+// Modal component
+
+function ModalComponent({ tareas, addTask, removeTask, toggleTask, show, onHide }: ModalComponentProps )  {
+
+  const handleClose = () => onHide();
+  
+  return (
+           <Modal
+             show={show}
+             size="xl"
+             onHide={onHide}
+             
+             style={{ marginLeft: '10%', transform: 'translateX(-10%)' }}
+            >
+             <Modal.Header closeButton>
+               <Modal.Title>&nbsp;&nbsp;Añadir Tarea</Modal.Title>
+             </Modal.Header>
+             <Modal.Body>
+                <div className='component-button-task'> 
+                      <div>
+                      <ButtonLetter tareas={tareas} addTask={addTask} removeTask={removeTask} toggleTask={toggleTask}/>
+                      </div>
+                      <div className="task-details">
+                        {/* Show description and date for tasks */}
+                        {tareas.map((tarea: Task, index: number) => (
+                          <div key={index} className="task-item">
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+             </Modal.Body>
+             <Modal.Footer>
+              <Button variant="secondary" onClick={handleClose}>
+                Close
+              </Button>
+              <Button variant="primary" onClick={handleClose}>
+                Save Changes
+              </Button>
+             </Modal.Footer>
+              
+          </Modal>
+  );
+}
+
 // Component to display the "Bandeja de entrada"
 function BandejaEntrada({ tareas, addTask, removeTask, toggleTask }: BandejaEntradaProps )  {
 
@@ -289,38 +347,52 @@ function App() {
   }, []);
   
 
+  //Para poder usar el Modal
+
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
   return (
     <Router>
       <div className="App">
+        
         <header className="App-header">
           <div className='component-title'>
             <TitleComponent/>
           </div>
           <div className='menu-plus-options'>
             <div className='container-menu-main'>
+                 <button className='menu-four-alternatives-icons-a1' onClick={handleShow}
+                 >
+                <AiFillPlusCircle className='alternative-icon-a1'/>&nbsp;Añadir tarea
+                 </button>
+                 <ModalComponent tareas={[]} addTask={addTask } removeTask={removeTask} 
+        toggleTask={toggleTask} show={show} onHide={handleClose}/>
                 <Link to="/bandeja-de-entrada" className="link-bandeja-entrada">
                   <button className='menu-four-alternatives-icons'>
-                <GoInbox className='alternative-icon-a'/>&nbsp;&nbsp;Bandeja de entrada
+                  &nbsp;<GoInbox className='alternative-icon-a'/>&nbsp;&nbsp;Bandeja de entrada
                  </button>
                 </Link>
                 <Link to="/hoy" className="link-hoy">
                   <button className='menu-four-alternatives-icons'>
-                <BiLeaf className='alternative-icon-hoy'/>&nbsp;&nbsp;Hoy
+                  &nbsp;<BiLeaf className='alternative-icon-hoy'/>&nbsp;&nbsp;Hoy
                   </button>
                 </Link>
                   <button className='menu-four-alternatives-icons'>
                 <Link to="/proximo" className="link-proximo">
-                  <TbAdjustmentsHorizontal className='alternative-icon-c'/>&nbsp;&nbsp;Próximo domingo
+                  &nbsp;<TbAdjustmentsHorizontal className='alternative-icon-c'/>&nbsp;&nbsp;Próximo domingo
                 </Link>
                   </button>
                   <button className='menu-four-alternatives-icons'>
                 <Link to="/tareas-realizadas" className="link-bandeja-entrada">
-                <FaRegCheckSquare className='alternative-icon-b'/>&nbsp;&nbsp;Tareas Realizadas
+                  &nbsp;<FaRegCheckSquare className='alternative-icon-b'/>&nbsp;&nbsp;Tareas Realizadas
                 </Link>
                   </button>
-              <button className='menu-four-alternatives-icons'>
+                  <button className='menu-four-alternatives-icons'>
                 <Link to="/filtros-y-etiquetas" className="link-bandeja-entrada">
-                <HiOutlineSquares2X2 className='alternative-icon-d'/>&nbsp;&nbsp;Filtros y etiquetas
+                  &nbsp;<HiOutlineSquares2X2 className='alternative-icon-d'/>&nbsp;&nbsp;Filtros y etiquetas
                 </Link>
               </button>
               {/* Add similar links for other buttons */}
@@ -353,6 +425,10 @@ export default App;
 
 
 
+
+function setShow(arg0: boolean) {
+  throw new Error("Function not implemented.");
+}
 /* ---> SEPTIMA SOLUCION <----
 
 

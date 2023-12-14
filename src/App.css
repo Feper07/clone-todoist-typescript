@@ -15,7 +15,7 @@
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
-    padding-top: 8%;
+    padding-top: 4%;
     padding-left: 1%;
     height: 2000px;
     background: #fafafa;
@@ -37,6 +37,26 @@
 }
 
 .menu-four-alternatives-icons:hover {
+    background: #e7e7e7;
+    border: white 1px solid;
+    border-radius: 5px;
+}
+
+.menu-four-alternatives-icons-a1{
+    cursor: pointer;
+    color: #dc4c3e;
+    background-color: #fafafa;
+    font-size: 2.3vh;
+    height: 40px;
+    width: 210px;
+    border: none;
+    font-weight: 600;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.menu-four-alternatives-icons-a1:hover {
     background: #e7e7e7;
     border: white 1px solid;
     border-radius: 5px;
@@ -107,6 +127,11 @@
     background: #e7e7e7;
     border: white 1px solid;
     border-radius: 5px;
+}
+
+.alternative-icon-a1{
+    color: #dc4c3e;
+    font-size: 4vh;
 }
 
 .alternative-icon-a{
@@ -344,3 +369,16 @@ h3{
     margin-top: 2.2%;
 }
   
+.custom-modal .modal-content {
+    margin-left: 10%; /* Ajusta el margen izquierdo según sea necesario */
+  }
+
+  .modal-body {
+    position: relative;
+    flex: 1 1 auto;
+    display: flex;
+    padding: var(--bs-modal-padding);
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: center;
+}

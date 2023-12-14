@@ -84,7 +84,7 @@
       return (
         <div className='select-options' ref={containerRef}>
           <button className='etc-button-calendar' onClick={toggleOpciones}>
-            <CiCalendar className='icon-cicalendar' />&nbsp;&nbsp;{selectedDate ? selectedDate.toLocaleDateString('es', { weekday: 'short', day: 'numeric', month: 'long' }) : 'Fecha de vencimiento'}
+            <CiCalendar className='icon-cicalendar' />&nbsp;&nbsp;{selectedDate ? selectedDate.toLocaleDateString('es', { weekday: 'short', day: 'numeric', month: 'long' }) : 'Fecha'}
             &nbsp;&nbsp;</button>
           {showOptions && (
             <div className='etc-options'>
