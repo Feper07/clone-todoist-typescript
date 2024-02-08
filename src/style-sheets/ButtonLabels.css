@@ -1,0 +1,92 @@
+.label-options{
+    padding-left : 1%;
+    position: absolute; /**/
+}
+
+.label-container-button-main{
+    padding:1%;
+    width: 170px;
+    color: rgb(139, 133, 133);
+    background-color: white;
+    cursor: pointer;
+    border: #c1bbbb 1px solid;
+    border-radius: 5px;
+    font-size: 1.8vh;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.label-container-button-main:hover {
+    background: #e7e7e7;
+}
+
+.label-container > button {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 170px;
+    padding : 1%;
+    color: #646262;
+    border-color:  #e7e7e7;
+    background-color: white;
+    border-style: solid ;
+    cursor: pointer;
+    font-size: 1.8vh;
+    position: relative; /**/
+    padding-right: 4%;
+}
+
+.etc-options-priority > button:hover {
+    background: #e7e7e7;
+}
+
+
+.fitag{
+    color: #646262;
+    font-size: 1.6vh;
+}
+
+.nike{
+    color: red;
+    font-size: 2vh;
+}
+
+.input-label{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 120px;
+    padding : 1%;
+    color: #646262;
+    border-color:  #e7e7e7; 
+    background-color: white;
+    border-style: none; 
+    cursor: pointer; 
+    font-size: 1.7vh;
+    outline: none;
+    margin-left: 8px;
+}
+
+.add-label{
+    border-style: none ;
+    cursor: pointer;
+    background-color: white;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.labelAiFillPlusCircle{
+    cursor: pointer;
+    color: #dc4c3e;
+    background-color: #fafafa;
+    font-size: 2.2vh;
+    border: none;
+    font-weight: 600;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding-right: 2%;
+}

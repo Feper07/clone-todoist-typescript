@@ -4,6 +4,7 @@ import { CiChat1, CiExport } from "react-icons/ci";
 import "../style-sheets/EtcButtonOptions.css";
 
 const EtcButtonOptions = () => {
+  
   const [showOptions, setShowOptions] = useState(false);
 
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -14,7 +15,7 @@ const EtcButtonOptions = () => {
 
   const handleOpcionClick = (option: string) => {
     console.log(`selected option: ${option}`);
-    setShowOptions(false); // Cerrar las opciones al seleccionar una opción
+    setShowOptions(false); // Close options when selecting an option
   };
 
   useEffect(() => {

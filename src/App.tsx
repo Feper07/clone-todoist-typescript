@@ -9,7 +9,7 @@ import CalendarD from './components/CalendarD';
 import ReminderButton from "./components/ReminderButton";
 import CalendarComponent from "./components/CalendarComponent";
 import TitleComponent from "./components/TitleComponent";
-import LastButton from "./components/LastButton";
+import ButtonLabels from "./components/ButtonLabels";
 import { VscComment } from "react-icons/vsc";
 import { TbAdjustmentsHorizontal } from "react-icons/tb";
 import { GoInbox } from "react-icons/go";
@@ -24,7 +24,6 @@ import { BiLeaf } from "react-icons/bi";
 import { AiFillPlusCircle } from "react-icons/ai";
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-
 
 interface BandejaEntradaProps {
    tareas: Task[],
@@ -80,8 +79,7 @@ function ModalComponent({ tareas, addTask, removeTask, toggleTask, show, onHide 
               <Button variant="primary" onClick={handleClose}>
                 Save Changes
               </Button>
-             </Modal.Footer>
-              
+             </Modal.Footer>              
           </Modal>
   );
 }
@@ -169,8 +167,6 @@ function Hoy({ tareas, removeTask, toggleTask }: HoyProps )  {
   );
 }
 
-//hete
-//funtion
 
 function isNextSunday(input: Date | undefined) {
   if (input) {
@@ -179,12 +175,12 @@ function isNextSunday(input: Date | undefined) {
     const dayOfWeek = today.getDay(); // 0 = domingo, 1 = lunes, ..., 6 = sábado
     const daysUntilNextSunday = 7 - dayOfWeek;
 
-    // Crear una fecha para el próximo domingo
+    // Create a date for next Sunday
     const nextSunday = new Date(today);
 
     nextSunday.setDate(today.getDate() + daysUntilNextSunday);
 
-    // Comparar la fecha con el próximo domingo
+    // Compare the date with next Sunday
     return (
       dateToCheck.getDate() === nextSunday.getDate() &&
       dateToCheck.getMonth() === nextSunday.getMonth() &&
@@ -203,24 +199,20 @@ interface ProximoProps{
 // Component to display the date "próximo"
 
 function Proximo({ tareas, removeTask, toggleTask }: ProximoProps)  {
-  const hoy = new Date(); // Obtener la fecha de hoy
-  const diaSemana = hoy.getDay(); // Obtener el día de la semana (0 = domingo, 1 = lunes, ..., 6 = sábado)
+  const hoy = new Date(); // Get today's date
+  const diaSemana = hoy.getDay(); // Get the day of the week (0 = domingo, 1 = lunes, ..., 6 = sábado)
 
-  // Calcular la diferencia de días hasta el próximo domingo
+  // Calculate the difference in days until next Sunday
   const diasHastaProximoDomingo = 7 - diaSemana;
 
-  // Crear una nueva fecha para el próximo domingo
+  // Create a new date for next Sunday
   const proximoDomingo = new Date(hoy);
   proximoDomingo.setDate(hoy.getDate() + diasHastaProximoDomingo);
 
-  // Formatear la fecha del próximo domingo como una cadena legible
+  // Format next Sunday's date as a readable string
   const fechaProximoDomingo = proximoDomingo.toLocaleDateString();
   const tareasProximoDomingo = tareas.filter((tarea) => tarea.done==false).filter((tarea) => isNextSunday(tarea.due_date));
 
-  /*
-  function removeTask2(id: string): void {
-    throw new Error("Function not implemented.");
-  }*/
 
   return (
     <div className='title-plus-component-button-task'>
@@ -244,13 +236,16 @@ function Proximo({ tareas, removeTask, toggleTask }: ProximoProps)  {
     </div>
   );
 }
+
 interface TareasRealizadasProps{ 
   tareas: Task[]; 
   removeTask: (id: string) => void; 
   toggleTask: (id: string) => void; 
 }
+
   // Component to display "Tareas Realizadas", task done!
-function TareasRealizadas({ removeTask, toggleTask, tareas }:TareasRealizadasProps ) {
+
+  function TareasRealizadas({ removeTask, toggleTask, tareas }:TareasRealizadasProps ) {
 
   return (
 
@@ -279,7 +274,6 @@ function TareasRealizadas({ removeTask, toggleTask, tareas }:TareasRealizadasPro
   function FiltrosEtiquetas() {
     const filtrosEtiquetas = "Filtros y etiquetas :D"; // Replace with my logic to get what I want to be displayed
     return (
-
       <div className='title-plus-component-button-task'>
       <div className='title-buttons-container-main'>
         <div className='text-main-title'>
@@ -307,13 +301,14 @@ function App() {
 
   const addTask = (task: Task) => {
     if (task.name.trim() !== '') {
-      task.id = uuidv4(); // Generar un ID único para la nueva tarea
+      task.id = uuidv4(); // Generate a unique ID for the new task
       const updatedTasks = [...tareas, task];
       setTareas(updatedTasks);
-      // Guardar tareas actualizadas en el Local Storage
+      // Save updated tasks to Local Storage
       localStorage.setItem('tareas', JSON.stringify(updatedTasks));
     }
-  };
+    };
+    
   const toggleTask = (id: string) => {
     const updatedTasks: Task[] = tareas.map((task) => {
       if (task.id === id) {
@@ -327,28 +322,26 @@ function App() {
     });
 
     setTareas(updatedTasks);
-    // Guardar tareas actualizadas en el Local Storage
+    // Save updated tasks to Local Storage
     localStorage.setItem('tareas', JSON.stringify(updatedTasks));
     }
 
   const removeTask = (id: string, isDeleteButtonClicked = false) => {
     const updatedTasks: Task[] = tareas.filter((task) => task.id !== id);
     setTareas(updatedTasks);
-    // Guardar tareas actualizadas en el Local Storage
+    // Save updated tasks to Local Storage
     localStorage.setItem('tareas', JSON.stringify(updatedTasks));
    
   };
   
-
   useEffect(() => {
-    // Recuperar tareas guardadas en el Local Storage al cargar la página
+    // Recover tasks saved in Local Storage on page load
     const storedTareas = JSON.parse(localStorage.getItem('tareas') || '[]');
     setTareas(storedTareas);
   }, []);
   
 
-  //Para poder usar el Modal
-
+  //In order to use Modal
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
@@ -369,7 +362,7 @@ function App() {
                 <AiFillPlusCircle className='alternative-icon-a1'/>&nbsp;Añadir tarea
                  </button>
                  <ModalComponent tareas={[]} addTask={addTask } removeTask={removeTask} 
-        toggleTask={toggleTask} show={show} onHide={handleClose}/>
+                  toggleTask={toggleTask} show={show} onHide={handleClose}/>
                 <Link to="/bandeja-de-entrada" className="link-bandeja-entrada">
                   <button className='menu-four-alternatives-icons'>
                   &nbsp;<GoInbox className='alternative-icon-a'/>&nbsp;&nbsp;Bandeja de entrada
@@ -422,13 +415,11 @@ function App() {
 
 export default App;
 
-
-
-
-
 function setShow(arg0: boolean) {
   throw new Error("Function not implemented.");
 }
+
+
 /* ---> SEPTIMA SOLUCION <----
 
 

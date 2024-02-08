@@ -9,7 +9,7 @@
       const toggleOpciones = () => {
         setShowOptions(!showOptions);
       };
-
+      
       const handleOpcionClick = (option: string) => {
         console.log(`selected option: ${option}`);
       };

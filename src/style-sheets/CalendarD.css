@@ -12,7 +12,7 @@
     right: -250px;
     min-width: 170px;
     display: flex;  
-    align-items: flex-start;  
+    align-items: center;  
     justify-content: center;
 }
 

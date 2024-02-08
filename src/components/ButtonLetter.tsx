@@ -5,11 +5,8 @@ import CalendarD from './CalendarD';
 import PriorityButtonOptions from './PriorityButtonOptions';
 import ReminderButton from './ReminderButton';
 import EtcButtonOptions from './EtcButtonOptions';
-import LastButton from './LastButton';
-import { HiOutlineCheckCircle } from "react-icons/hi";
-import { HiCheck } from "react-icons/hi";
+import ButtonLabels from './ButtonLabels';
 import { Priority, Task } from '../typos';
-import AddTask from './AddTask';
 import { id } from 'date-fns/locale';
 import TaskList from './TaskList';
 import { v4 as uuidv4 } from 'uuid';
@@ -36,46 +33,119 @@ interface ButtonLetterProps{
 
 const ButtonLetter = (props: ButtonLetterProps) => {
   
-  const [task, setTask] = useState<Task>({name: "", description:"", id:"", done: false, completed: false});
-  //const [textAdd, setTextAdd] = useState<Task[]>([]);
+  const [task, setTask] = useState<Task>({
+    name: "", 
+    description:"", 
+    id:"", 
+    done: false, 
+    completed: false
+  });
+  
+  const [selectedOption, setSelectedOption] = useState<string>(""); // New status for the selected option. ButtonLabel
+  const [showSelectedOption, setShowSelectedOption] = useState<boolean>(false);
+  const [selectedOptions, setSelectedOptions] = useState<Set<string>>(new Set()); // Store multiple selected labels
 
-  const handleInputChange = (event: { target: { value: string } }) => {
-    setTask({...task, ...{name:event.target.value }})
+
+  const getTags = (text: string): Set<string> => {
+    const words = text.split(/\s+/); // Separate words by spaces
+  
+    const updatedOptions: string[] = [];  
+    words.forEach(word => {
+      if (word.startsWith('@') && word.length >= 3) { // Check if "@" has additional text
+        updatedOptions.push(word.substring(1)); // Extract label without "@"
+      }
+    });
+    return  new Set(updatedOptions)
   };
-
+  // Function to handle changes in the input
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const enteredValue =event.target.value;
+    let updatedTask = { ...task };
+  
+    const words = enteredValue.split(/\s+/); // Separate words by spaces
+  
+    const updatedOptions: string[] = [];
+    const tags: string[] = [];
+  
+    words.forEach(word => {
+      if (word.startsWith('@') && word.length >= 3) { // Check if "@" has additional text
+        updatedOptions.push(word.substring(1)); // Extract label without "@"
+        tags.push(word); // Track labels separately
+      }
+    });
+  
+    updatedTask.name = enteredValue;
+  
+    setSelectedOptions(new Set(updatedOptions)); // Set detected labels as selected tags
+    setTask(updatedTask);
+    
+  };
+  
+  // Function to handle changes in the description  
   const handleDescriptionChange= (event: { target: { value: string } }) => {
+     // const etiqueta = sacar_etiquetas(value)
+     // for i in etiquea{ selected.add(i)}
+
     setTask({...task, ...{description:event.target.value }})
   };
 
+  // Function to handle changes in priority  
   const handlePriorityChange = (priority: string) => {
     setTask({...task, ...{priority: priority as Priority }})
   };
 
+  // Function to handle changes in due date  
   const handleDueDateChange= (date: Date) => {
     setTask({...task, ...{due_date: date }})
   };
-
+  
+  // Function to add a task  
   const handleAddTask = () => {
-    if (task.name.trim() !== '') {
-      props.addTask(task);
-      setTask({name: "", description:"", id: "", done: false, completed: false});
+    let combinedName = task.name.trim();
+  
+    if (showSelectedOption && selectedOptions.size > 0) {
+      const selectedTags = Array.from(selectedOptions).map(option => `@${option}`).join(' ');
+      combinedName = `${selectedTags} ${combinedName}`;
+    } else if (showSelectedOption && selectedOption.trim() !== '') {
+      combinedName = `@${selectedOption} ${combinedName}`;
+    }
+  
+    if (combinedName !== '') {
+      const newTask = {
+        ...task,
+        ...{ name: combinedName.trim() } // Remove whitespace around name
+      };
+  
+      props.addTask({ ...newTask, id: uuidv4() }); // Add the task with all labels selected
+      setTask({ name: '', description: '', id: '', done: false, completed: false }); // Clear fields after adding task
+      setSelectedOption('');
+      setShowSelectedOption(false);
+      setSelectedOptions(new Set()); // Clear selected tags after adding task
     }
   };
 
+  // Function to remove a task  
   const handleRemoveTask = (index: number) => {    
     props.removeTask(props.tareas[index].id);
   };
 
+  // Function to handle update of selected option in ButtonLabels
+  const handleOptionChange = (options: Set<string>) => {
+    setSelectedOptions(options);
+  };
+
+  // Function to add a task with its details  
   const addTask = (newTask: Task) => {
     if (newTask.name.trim() !== '') {
-      const taskWithId = { ...newTask, id: uuidv4()  }; // Asignar un ID único como string
+      const taskWithId = { ...newTask, id: uuidv4()  }; // Assign a unique ID as a string
       props.addTask(taskWithId);
-      setTask({ name: '', description: '', id: '', done: false, completed: false }); // Limpiar los campos después de añadir la tarea
+      setTask({ name: '', description: '', id: '', done: false, completed: false }); // Clear fields after adding task
     }
   };
   
   const isButtonActive = task.name.trim() !== '';
 
+  // Function to format due dat  
   function formatDueDate(dueDate: Date | string | undefined): string | null {
     if (!dueDate) {
       return null;
@@ -98,6 +168,7 @@ const ButtonLetter = (props: ButtonLetterProps) => {
     }
   }
   
+  // Function to get due date color  
   function getDueDateColor(dueDate: Date | string | undefined): string {
     if (!dueDate) {
       return ''; // No color
@@ -111,30 +182,32 @@ const ButtonLetter = (props: ButtonLetterProps) => {
    
     // Get tomor row's date
     const tomorrow = new Date(today);
-    tomorrow.setDate(tomorrow.getDate() + 1);
-  
-    if (dateObject.toDateString() === today.toDateString()) {
-      return 'purple'; // Today
-    } else if (dateObject.toDateString() === tomorrow.toDateString()) {
-      return 'orange'; // Tomorrow
-    } else if (dateObject.getDay() === 0) {
-      return 'green'; // Sunday
-    } else {
-      return ''; // Default color
+      tomorrow.setDate(tomorrow.getDate() + 1);
+    
+      if (dateObject.toDateString() === today.toDateString()) {
+        return 'purple'; // Today
+      } else if (dateObject.toDateString() === tomorrow.toDateString()) {
+        return 'orange'; // Tomorrow
+      } else if (dateObject.getDay() === 0) {
+        return 'green'; // Sunday
+      } else {
+        return ''; // Default color
+      }
     }
-  }
-  
+  let non_text_tags = Array.from(selectedOptions).filter(option=>
+    !getTags(task.name).has(option)
+  );
   return (
     <div className="ButtonLetter-main">
-      <TaskList tareas={props.tareas.filter((tarea)=>tarea.done==false)} removeTask={props.removeTask} toggleTask={props.toggleTask}></TaskList>      
       <div>
         <input
           className="input-calendar-a"
           type="text" 
           placeholder="  Nombre de la tarea"
           onChange={handleInputChange}
-          value={task.name}
-        />
+          value={ 
+            non_text_tags.length > 0 ? `${non_text_tags.map((option) => `@${option}`).join(' ')} ${task.name}` : task.name }
+          />
       </div>
       <div>
         <input onChange={handleDescriptionChange} value={task.description} className="input-calendar-b" type="text" placeholder="  Descripción" />
@@ -143,10 +216,11 @@ const ButtonLetter = (props: ButtonLetterProps) => {
         <div className="one-calendar"><CalendarD value={task.due_date} onChange={handleDueDateChange}/></div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <div className="one-priority"><PriorityButtonOptions value={task.priority} onChange={handlePriorityChange}/></div> &nbsp;
         <div className="one-reminder"><ReminderButton/></div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        
         <div className="one-etc"><EtcButtonOptions/></div>
       </div>
       <div className="last-part-description">
-        <div><LastButton/></div>
+        <div><ButtonLabels selectedOptions={selectedOptions} onOptionChange={handleOptionChange} /> {/* Pasar la función como prop */}</div>
         <div className="last-part-tow-button">
           <button className="last-button-a">Cancelar</button>&nbsp;&nbsp;
           <button
@@ -157,14 +231,47 @@ const ButtonLetter = (props: ButtonLetterProps) => {
             Añadir Tarea
           </button>
         </div>
-
       </div>
+      <TaskList tareas={props.tareas.filter((tarea)=>tarea.done==false)} removeTask={props.removeTask} toggleTask={props.toggleTask}></TaskList>      
     </div>
   );
 };
 
 export default ButtonLetter;
 
+
+
+/*
+No reconoce las etiquetas cuando la palabra inicia con @, a menos de que hayan 5 letras
+
+const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const enteredValue = event.target.value;
+    let updatedTask = { ...task };
+  
+    const words = enteredValue.split(/\s+/); // Separar las palabras por espacios
+  
+    const updatedOptions: string[] = [];
+    const tags: string[] = [];
+  
+    words.forEach(word => {
+      if (word.startsWith('@') && word.length >= 6) { // Comprobar si "@" tiene texto adicional
+        updatedOptions.push(word.substring(1)); // Extraer la etiqueta sin "@"
+        tags.push(word); // Rastrear las etiquetas por separado
+      }
+    });
+  
+    if (tags.length > 0) {
+      const textWithoutTags = words.filter(word => !tags.includes(word)).join(' '); // Excluir las etiquetas del texto
+      updatedTask.name = textWithoutTags;
+    } else {
+      updatedTask.name = enteredValue;
+    }
+  
+    setSelectedOptions(updatedOptions); // Establecer las etiquetas detectadas como las etiquetas seleccionadas
+    setTask(updatedTask);
+  };
+
+*/
 
 
 

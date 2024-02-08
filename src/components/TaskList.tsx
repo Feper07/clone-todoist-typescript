@@ -5,14 +5,12 @@ import CalendarD from './CalendarD';
 import PriorityButtonOptions from './PriorityButtonOptions';
 import ReminderButton from './ReminderButton';
 import EtcButtonOptions from './EtcButtonOptions';
-import LastButton from './LastButton';
+import ButtonLabels from './ButtonLabels';
 import { HiOutlineCheckCircle } from "react-icons/hi";
 import { HiCheck } from "react-icons/hi";
 import { Priority, Task } from '../typos';
 import AddTask from './AddTask';
 import { FaRegTrashAlt } from "react-icons/fa";
-//import { id } from 'date-fns/locale';
-//import { v4 as uuidv4 } from 'uuid';
 
 function get_class(p: Priority):string {
     switch (p) {
@@ -26,16 +24,17 @@ function get_class(p: Priority):string {
        return "remove-button-priority4"
     }
   }
-interface TaskListProps {
-   tareas: Task[], 
-   removeTask: (id: string) => void, 
-   toggleTask: (id: string) => void, 
-   showDeleteButton?: boolean 
-}
-function TaskList(props: TaskListProps){
-    const handleToggleTask = (id: string) => {
-      props.toggleTask(id)
-   };
+    interface TaskListProps {
+      tareas: Task[], 
+      removeTask: (id: string) => void, 
+      toggleTask: (id: string) => void, 
+      showDeleteButton?: boolean 
+    }
+
+    function TaskList(props: TaskListProps){
+      const handleToggleTask = (id: string) => {
+        props.toggleTask(id)
+    };
    
     function formatDueDate(dueDate: Date | string | undefined): string | null {
       if (!dueDate) {
@@ -85,16 +84,17 @@ function TaskList(props: TaskListProps){
       }
     }
 
-
-     return (
+    //reverse(), will reverse the order of the tasks, placing the last one at the beginning and the first ones at the end.
+    
+    return (
      <div className="text-task-buttonletter">
-     {props.tareas.map((tarea) => (
-       <div key={tarea.id} className="task-item">
+     {props.tareas.slice().reverse().map((tarea) => (
+       <div key={tarea.id} className="task-item"> 
            <div className='component-remove-button'> 
              <button className={(["remove-button", tarea.priority?get_class(tarea.priority): ""].join(" "))} onClick={() => handleToggleTask(tarea.id)}>
                <HiCheck className={"remove-icon"} />
             </button>
-            {/* Condición para mostrar el botón de eliminar */}
+            {/* Condition to show delete button */}
             {props.showDeleteButton && (
               //
               <button onClick={() => props.removeTask(tarea.id)} className="delete-task-button">

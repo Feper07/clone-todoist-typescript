@@ -3,30 +3,43 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "../style-sheets/PriorityButtonOptions.css";
 import { BsFlagFill, BsFlag, BsCheck } from "react-icons/bs";
 
+// Defining component properties
 interface PriorityButtonOptions{
   onChange?: (priority: string)=>void,
   value?:string
 }
+
+// PriorityButtonOptions functional component
 const PriorityButtonOptions = (props:PriorityButtonOptions) => {
+
+  // Status to control the visibility of the options menu
   const [priorityButton, setPriorityButton] = useState(false);
+  // Status to store the selected priority option
   const [selectedOption, setSelectedOption] = useState<string>(props.value?props.value:"");
+  
+  // Effect to update 'selectedOption' state when 'props.value' changes
   React.useEffect(() => {
     setSelectedOption(props.value?props.value:"");
   }, [props.value]);
+  
+  // Reference to the main container of the component
   const containerRef = useRef<HTMLDivElement | null>(null);
 
+  // Feature to show/hide options menu when clicking main button
   const toggleOpciones = () => {
     setPriorityButton(!priorityButton);
   };
 
+  // Function to handle clicking on a priority option
   const handleOpcionClick = (option: string) => {
-    setSelectedOption(option);
+    setSelectedOption(option); // Sets the selected option
     if(props.onChange){
-      props.onChange(option);
+      props.onChange(option); // Call the onChange function if it is defined
     }
-    setPriorityButton(false);
+    setPriorityButton(false); // Hide the options menu
   };
 
+  // Effect to close menu if clicked outside of component
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (containerRef.current && !containerRef.current.contains(event.target as Node)) {

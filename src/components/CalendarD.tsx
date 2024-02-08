@@ -50,7 +50,7 @@
           setSelectedDate(nextSaturdayDate);
         }
         if (option !== 'edit-task-actions') {
-          toggleOpciones(); // Cerrar las opciones después de seleccionar una fecha
+          toggleOpciones(); // Close options after selecting a date
         }
       };
 
@@ -59,12 +59,12 @@
         if(props.onChange){
           props.onChange(date);
         }
-        toggleOpciones(); // Cerrar las opciones después de seleccionar una fecha
+        toggleOpciones();
       };
 
       const handleSinFechaClick = () => {
-        setSelectedDate(null); // Establece la fecha seleccionada como nula (sin fecha)
-        toggleOpciones(); // Cierra las opciones después de seleccionar "Sin fecha"
+        setSelectedDate(null); // Sets the selected date to null (no date)
+        toggleOpciones(); // Close the options after selecting "No date"
       };      
 
       useEffect(() => {
