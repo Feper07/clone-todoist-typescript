@@ -45,6 +45,8 @@ const ButtonLetter = (props: ButtonLetterProps) => {
   const [showSelectedOption, setShowSelectedOption] = useState<boolean>(false);
   const [selectedOptions, setSelectedOptions] = useState<Set<string>>(new Set()); // Store multiple selected labels
 
+  // Nuevo estado para almacenar las etiquetas ingresadas
+  const [inputTags, setInputTags] = useState<Set<string>>(new Set(["gym", "trabajo"]));
 
   const getTags = (text: string): Set<string> => {
     const words = text.split(/\s+/); // Separate words by spaces
@@ -57,28 +59,34 @@ const ButtonLetter = (props: ButtonLetterProps) => {
     });
     return  new Set(updatedOptions)
   };
-  // Function to handle changes in the input
+  
+  // Function to handle changes to the input and extract the added tags.
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const enteredValue =event.target.value;
     let updatedTask = { ...task };
   
     const words = enteredValue.split(/\s+/); // Separate words by spaces
-  
     const updatedOptions: string[] = [];
     const tags: string[] = [];
   
     words.forEach(word => {
       if (word.startsWith('@') && word.length >= 3) { // Check if "@" has additional text
-        updatedOptions.push(word.substring(1)); // Extract label without "@"
+        const tag = word.substring(1); // Extract label without "@"
+        updatedOptions.push(tag); // Add tag to updated options
         tags.push(word); // Track labels separately
+  
+        // If the tag is not already in the selectedOptions, add it
+        if (!selectedOptions.has(tag)) {
+          setSelectedOptions(new Set(selectedOptions).add(tag));
+        }
       }
     });
   
     updatedTask.name = enteredValue;
   
     setSelectedOptions(new Set(updatedOptions)); // Set detected labels as selected tags
+    //setInputTags(new Set(tags)); // Update inputTags with the entered tags
     setTask(updatedTask);
-    
   };
   
   // Function to handle changes in the description  
@@ -121,6 +129,7 @@ const ButtonLetter = (props: ButtonLetterProps) => {
       setSelectedOption('');
       setShowSelectedOption(false);
       setSelectedOptions(new Set()); // Clear selected tags after adding task
+      //setInputTags(new Set()); //Clear the tags entered after adding the task
     }
   };
 
@@ -132,6 +141,7 @@ const ButtonLetter = (props: ButtonLetterProps) => {
   // Function to handle update of selected option in ButtonLabels
   const handleOptionChange = (options: Set<string>) => {
     setSelectedOptions(options);
+    setInputTags(options); // Update manually entered tags as well
   };
 
   // Function to add a task with its details  
@@ -167,7 +177,7 @@ const ButtonLetter = (props: ButtonLetterProps) => {
       return `${dayName} ${dayNumber}`;
     }
   }
-  
+  console.log(inputTags, "inputTag");
   // Function to get due date color  
   function getDueDateColor(dueDate: Date | string | undefined): string {
     if (!dueDate) {
@@ -205,6 +215,10 @@ const ButtonLetter = (props: ButtonLetterProps) => {
           type="text" 
           placeholder="  Nombre de la tarea"
           onChange={handleInputChange}
+          onBlur={()=>{
+            let tags = Array.from(getTags(task.name)).map((x)=>x.toLowerCase());
+            setInputTags(new Set([...Array.from(inputTags), ...Array.from(tags)]));
+          }}
           value={ 
             non_text_tags.length > 0 ? `${non_text_tags.map((option) => `@${option}`).join(' ')} ${task.name}` : task.name }
           />
@@ -220,7 +234,7 @@ const ButtonLetter = (props: ButtonLetterProps) => {
         <div className="one-etc"><EtcButtonOptions/></div>
       </div>
       <div className="last-part-description">
-        <div><ButtonLabels selectedOptions={selectedOptions} onOptionChange={handleOptionChange} /> {/* Pasar la función como prop */}</div>
+        <div><ButtonLabels selectedOptions={selectedOptions} onOptionChange={handleOptionChange} inputTags={inputTags}/> {/* Pasar la función como prop */}</div>
         <div className="last-part-tow-button">
           <button className="last-button-a">Cancelar</button>&nbsp;&nbsp;
           <button

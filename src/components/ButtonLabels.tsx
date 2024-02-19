@@ -10,17 +10,24 @@ import { FaRegTrashAlt } from "react-icons/fa";
 interface ButtonLabelsProps {
   onOptionChange: (options: Set<string>) => void;
   selectedOptions: Set<string>
+  inputTags: Set<string>;
 }
 
-const ButtonLabels: React.FC<ButtonLabelsProps> = ({ onOptionChange, selectedOptions }: ButtonLabelsProps) => {
+const ButtonLabels: React.FC<ButtonLabelsProps> = ({ onOptionChange, selectedOptions, inputTags}: ButtonLabelsProps) => {
   const [showContainerLabel, setShowContainerLabel] = useState(false);
   const [selectedLabels, setSelectedLabels] = useState<Set<string>>(selectedOptions);
   const [newLabel, setNewLabel] = useState("");
   const [iconColor, setIconColor] = useState("");
   const [options, setOptions] = useState<string[]>(["Trabajo", "Gym"]); // Initial options
+  const [allTags, setAllTags] = useState<string[]>(["Trabajo", "Gym"]); // Inicialmente contiene las etiquetas existentes
+
+
+  //////
   useEffect(()=>{
     setSelectedLabels(selectedOptions);
   }, [selectedOptions]);
+
+
   const containerRef = useRef<HTMLDivElement | null>(null);
 
   const toggleOptionsLabels = () => {
@@ -30,45 +37,62 @@ const ButtonLabels: React.FC<ButtonLabelsProps> = ({ onOptionChange, selectedOpt
   const handleLabelClick = (option: string) => {
     const updatedLabels = new Set(selectedLabels);
 
-    if (updatedLabels.has(option)) {
-      updatedLabels.delete(option);
+    // Normalizar la etiqueta a minúsculas antes de comparar
+    const normalizedOption = option.toLowerCase();
+
+    if (updatedLabels.has(normalizedOption)) {
+        updatedLabels.delete(normalizedOption);
     } else {
-      updatedLabels.add(option);
+        updatedLabels.add(normalizedOption);
     }
 
     setSelectedLabels(updatedLabels);
     onOptionChange(updatedLabels);
-  };
-
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const inputText = event.target.value;
-    const capitalizedText = inputText.charAt(0).toUpperCase() + inputText.slice(1);
-
-    setNewLabel(capitalizedText);
-    setIconColor(capitalizedText.trim() ? "#db4c3f" : "#eda59e");
-  };
-
-  const handleAddLabelClick = () => {
-    if (newLabel.trim() && !options.includes(newLabel.trim())) {
-      setOptions([...options, newLabel.trim()]);
-      const updatedLabels = new Set(selectedLabels);
-      updatedLabels.add(newLabel.trim());
-      setSelectedLabels(updatedLabels);
-      onOptionChange(updatedLabels);
-    } else {
-      console.log(`La etiqueta "${newLabel.trim()}" ya existe`);
-    }
-
-    setNewLabel("");
-    setShowContainerLabel(false);
-  };
+};
 
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
-        setShowContainerLabel(false);
-      }
+      // Normalizar todas las opciones a minúsculas
+      const lowercaseOptions = options.map(option => option.toLowerCase());
+      setOptions(lowercaseOptions);
+  }, [options]);
+
+  useEffect(() => {
+      // Normalizar todas las etiquetas seleccionadas a minúsculas antes de comparar
+      const lowercaseSelectedOptions = new Set(Array.from(selectedOptions).map(option => option.toLowerCase()));
+      setSelectedLabels(lowercaseSelectedOptions);
+  }, [selectedOptions]);
+
+    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+      const inputText = event.target.value;
+      const capitalizedText = inputText.charAt(0).toUpperCase() + inputText.slice(1);
+
+      setNewLabel(capitalizedText);
+      setIconColor(capitalizedText.trim() ? "#db4c3f" : "#eda59e");
     };
+
+    const handleAddLabelClick = () => {
+      if (newLabel.trim() && !options.includes(newLabel.trim())) {
+        
+        setOptions([...options, newLabel.trim()]);
+        setAllTags(prevTags => [...prevTags, newLabel.trim()]);
+        const updatedLabels = new Set(selectedLabels);
+        updatedLabels.add(newLabel.trim());
+        setSelectedLabels(updatedLabels);
+        onOptionChange(updatedLabels);
+      } else {
+        console.log(`La etiqueta "${newLabel.trim()}" ya existe`);
+      }
+
+      setNewLabel("");
+      setShowContainerLabel(false);
+    };
+
+    useEffect(() => {
+      const handleClickOutside = (event: MouseEvent) => {
+        if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+          setShowContainerLabel(false);
+        }
+      };
 
     document.addEventListener("click", handleClickOutside);
 
@@ -91,7 +115,7 @@ const ButtonLabels: React.FC<ButtonLabelsProps> = ({ onOptionChange, selectedOpt
               placeholder="Nueva Etiqueta"
               value={newLabel}
               onChange={handleInputChange}
-            />
+            />  
             <button
               className="add-label"
               onClick={handleAddLabelClick}
@@ -103,7 +127,7 @@ const ButtonLabels: React.FC<ButtonLabelsProps> = ({ onOptionChange, selectedOpt
               />
             </button>
           </button>
-          {options.map((option, index) => (
+          {Array.from(inputTags).map((option, index) => (
             <button
               key={index}
               onClick={() => handleLabelClick(option)}
@@ -125,3 +149,28 @@ const ButtonLabels: React.FC<ButtonLabelsProps> = ({ onOptionChange, selectedOpt
 };
 
 export default ButtonLabels;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
