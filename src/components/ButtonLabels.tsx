@@ -7,6 +7,8 @@ import { FiTag } from "react-icons/fi";
 import { AiFillPlusCircle } from "react-icons/ai";
 import { FaRegTrashAlt } from "react-icons/fa";
 
+
+////
 interface ButtonLabelsProps {
   onOptionChange: (options: Set<string>) => void;
   selectedOptions: Set<string>
@@ -26,6 +28,12 @@ const ButtonLabels: React.FC<ButtonLabelsProps> = ({ onOptionChange, selectedOpt
   useEffect(()=>{
     setSelectedLabels(selectedOptions);
   }, [selectedOptions]);
+
+  useEffect(() => {
+    // Normalizar todas las etiquetas seleccionadas a minúsculas antes de comparar
+    const lowercaseSelectedOptions = new Set(Array.from(selectedOptions).map(option => option.toLowerCase()));
+    setSelectedLabels(lowercaseSelectedOptions);
+  }, []); // Solo se ejecuta una vez al montar el componente
 
 
   const containerRef = useRef<HTMLDivElement | null>(null);

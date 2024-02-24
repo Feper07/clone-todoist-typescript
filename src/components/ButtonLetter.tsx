@@ -11,6 +11,7 @@ import { id } from 'date-fns/locale';
 import TaskList from './TaskList';
 import { v4 as uuidv4 } from 'uuid';
 
+////
 function get_class(p: Priority):string {
   switch (p) {
    case Priority.Priority1:
@@ -138,11 +139,14 @@ const ButtonLetter = (props: ButtonLetterProps) => {
     props.removeTask(props.tareas[index].id);
   };
 
-  // Function to handle update of selected option in ButtonLabels
-  const handleOptionChange = (options: Set<string>) => {
-    setSelectedOptions(options);
-    setInputTags(options); // Update manually entered tags as well
-  };
+// Function to handle update of selected option in ButtonLabels
+const handleOptionChange = (options: Set<string>) => {
+  setSelectedOptions(options);
+  
+  // Eliminar etiquetas seleccionadas del input
+  const updatedName = eliminarEtiquetasSeleccionadas(options, task.name);
+  setTask({ ...task, name: updatedName });
+};
 
   // Function to add a task with its details  
   const addTask = (newTask: Task) => {
@@ -207,6 +211,31 @@ const ButtonLetter = (props: ButtonLetterProps) => {
   let non_text_tags = Array.from(selectedOptions).filter(option=>
     !getTags(task.name).has(option)
   );
+
+///
+
+const eliminarEtiquetasSeleccionadas = (etiquetas: Set<string>, texto: string): string => {
+  let nueva_cadena = [];
+  for(let palabra of texto.split(" ")){  
+  if(palabra.startsWith("@")){
+      if(etiquetas.has(palabra.substring(1))){
+        nueva_cadena.push(palabra) 
+      }
+    }else{
+      nueva_cadena.push(palabra) 
+    }
+  } 
+  return nueva_cadena.join(" ")
+
+  /*
+  
+  let nuevaCadena = texto;
+  etiquetas.forEach(etiqueta => {
+    nuevaCadena = nuevaCadena.replace(new RegExp(`@${etiqueta}\\b`, 'g'), ''); // Eliminar etiqueta del texto
+  });
+  return nuevaCadena.trim();*/
+};
+  
   return (
     <div className="ButtonLetter-main">
       <div>
@@ -253,6 +282,18 @@ const ButtonLetter = (props: ButtonLetterProps) => {
 
 export default ButtonLetter;
 
+
+/* actualizar input de buttonLetter 
+
+const handleOptionChange = (options: Set<string>) => {
+  setSelectedOptions(options);
+  
+  // Limpiar las etiquetas seleccionadas si el conjunto de opciones está vacío
+  if (options.size === 0) {
+    setTask({ ...task, name: task.name.replace(/@\w+\s?/g, '') });
+  }
+};
+*/
 
 
 /*
