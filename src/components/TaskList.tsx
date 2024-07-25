@@ -12,18 +12,20 @@ import { Priority, Task } from '../typos';
 import AddTask from './AddTask';
 import { FaRegTrashAlt } from "react-icons/fa";
 
-function get_class(p: Priority):string {
-    switch (p) {
-     case Priority.Priority1:
-       return "remove-button-priority1"
-     case Priority.Priority2:
-       return "remove-button-priority2"
-     case Priority.Priority3:
-       return "remove-button-priority3"
-     case Priority.Priority4:
-       return "remove-button-priority4"
+    //Function that returns a CSS class based on the task priority
+    function get_class(p: Priority):string {
+      switch (p) {
+      case Priority.Priority1:
+        return "remove-button-priority1"
+      case Priority.Priority2:
+        return "remove-button-priority2"
+      case Priority.Priority3:
+        return "remove-button-priority3"
+      case Priority.Priority4:
+        return "remove-button-priority4"
+      }
     }
-  }
+
     interface TaskListProps {
       tareas: Task[], 
       removeTask: (id: string) => void, 
@@ -31,11 +33,13 @@ function get_class(p: Priority):string {
       showDeleteButton?: boolean 
     }
 
-    function TaskList(props: TaskListProps){
-      const handleToggleTask = (id: string) => {
-        props.toggleTask(id)
+function TaskList(props: TaskListProps){
+
+    const handleToggleTask = (id: string) => {
+        props.toggleTask(id); //Function to toggle the state of a task
     };
    
+    //Function to format the due date of a task
     function formatDueDate(dueDate: Date | string | undefined): string | null {
       if (!dueDate) {
         return null;
@@ -58,10 +62,11 @@ function get_class(p: Priority):string {
       }
     }
     
+    //Function to get the color of a task's due date
     function getDueDateColor(dueDate: Date | string | undefined): string {
       if (!dueDate) {
         return ''; // No color
-      }
+    }
     
       const dateObject = dueDate instanceof Date ? dueDate : new Date(dueDate);
     

@@ -11,20 +11,6 @@ import { id } from 'date-fns/locale';
 import TaskList from './TaskList';
 import { v4 as uuidv4 } from 'uuid';
 
-////
-function get_class(p: Priority):string {
-  switch (p) {
-   case Priority.Priority1:
-     return "remove-button-priority1"
-   case Priority.Priority2:
-     return "remove-button-priority2"
-   case Priority.Priority3:
-     return "remove-button-priority3"
-   case Priority.Priority4:
-     return "remove-button-priority4"
-  }
-}
-
 interface ButtonLetterProps{
   tareas:Task[],
   addTask:(task: Task)=>void,
@@ -42,22 +28,30 @@ const ButtonLetter = (props: ButtonLetterProps) => {
     completed: false
   });
   
+  //State to store the individual selected option as a string
   const [selectedOption, setSelectedOption] = useState<string>(""); // New status for the selected option. ButtonLabel
+  
+  //Status to indicate whether the selected option should be displayed
   const [showSelectedOption, setShowSelectedOption] = useState<boolean>(false);
+  
+  //State to store multiple selected options as a set
   const [selectedOptions, setSelectedOptions] = useState<Set<string>>(new Set()); // Store multiple selected labels
 
-  // Nuevo estado para almacenar las etiquetas ingresadas
+  //New state to store entered tags
   const [inputTags, setInputTags] = useState<Set<string>>(new Set(["gym", "trabajo"]));
 
+ //Function to extract labels from a text string
   const getTags = (text: string): Set<string> => {
     const words = text.split(/\s+/); // Separate words by spaces
   
     const updatedOptions: string[] = [];  
     words.forEach(word => {
+      // Check if "@" has additional text
       if (word.startsWith('@') && word.length >= 3) { // Check if "@" has additional text
         updatedOptions.push(word.substring(1)); // Extract label without "@"
       }
     });
+    // Return an updated set of tags
     return  new Set(updatedOptions)
   };
   
@@ -133,6 +127,11 @@ const ButtonLetter = (props: ButtonLetterProps) => {
       //setInputTags(new Set()); //Clear the tags entered after adding the task
     }
   };
+
+  //Funcion para eliminar texto del input al hacer click en el boton cancelar
+  const handleCancelarButton = () =>{
+    setTask({ name: '', description: '', id: '', done: false, completed: false });
+  }
 
   // Function to remove a task  
   const handleRemoveTask = (index: number) => {    
@@ -212,7 +211,6 @@ const handleOptionChange = (options: Set<string>) => {
     !getTags(task.name).has(option)
   );
 
-///
 
 const eliminarEtiquetasSeleccionadas = (etiquetas: Set<string>, texto: string): string => {
   let nueva_cadena = [];
@@ -227,13 +225,6 @@ const eliminarEtiquetasSeleccionadas = (etiquetas: Set<string>, texto: string): 
   } 
   return nueva_cadena.join(" ")
 
-  /*
-  
-  let nuevaCadena = texto;
-  etiquetas.forEach(etiqueta => {
-    nuevaCadena = nuevaCadena.replace(new RegExp(`@${etiqueta}\\b`, 'g'), ''); // Eliminar etiqueta del texto
-  });
-  return nuevaCadena.trim();*/
 };
   
   return (
@@ -265,7 +256,7 @@ const eliminarEtiquetasSeleccionadas = (etiquetas: Set<string>, texto: string): 
       <div className="last-part-description">
         <div><ButtonLabels selectedOptions={selectedOptions} onOptionChange={handleOptionChange} inputTags={inputTags}/> {/* Pasar la función como prop */}</div>
         <div className="last-part-tow-button">
-          <button className="last-button-a">Cancelar</button>&nbsp;&nbsp;
+          <button className="last-button-a" onClick={handleCancelarButton}>Cancelar</button>&nbsp;&nbsp;
           <button
             disabled={!isButtonActive}
             className={isButtonActive ? "last-button-b" : "last-button-b-disabled"}
@@ -666,6 +657,7 @@ export default ButtonLetter;    */
 
 
 /*   ---> PRIMERA SOLUCION  <----
+//Es basicamente ButtonLetter (la primera versión)
 
 import React from 'react'; 
 import "../style-sheets/ButtonLetter.css" 

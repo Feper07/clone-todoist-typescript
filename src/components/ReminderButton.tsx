@@ -12,6 +12,7 @@ function ReminderButton() {
   };
  
   useEffect(() => {
+   
     const handleClickOutside = (event: MouseEvent) => {
       if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
         setShowOptions(false);
@@ -31,11 +32,11 @@ function ReminderButton() {
       <CiClock1 className='icon-lok' />&nbsp;&nbsp;Recordatorios&nbsp;
         <div className='pro'>PRO</div>
       </button>
-      {showOptions && (
-        <div className='reminder-options'>
-          {/* opciones del botón */}
-        </div>
-      )}
+        {showOptions && (
+          <div className='reminder-options'>
+            {/* opciones del botón */}
+          </div>
+        )}
     </div>
   ); 
 }

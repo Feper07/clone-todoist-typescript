@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Route, Routes, Link, Outlet } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes, Link, Outlet, Navigate } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 import './App.css';
@@ -299,6 +299,7 @@ function App() {
   // Example: I'm gonna say that I have a list of tasks with dates in my local state
   const [tareas, setTareas] = useState<Task[]>([]);
 
+  //Function to add a task to the task list
   const addTask = (task: Task) => {
     if (task.name.trim() !== '') {
       task.id = uuidv4(); // Generate a unique ID for the new task
@@ -309,6 +310,7 @@ function App() {
     }
     };
     
+  //Toggles the 'done' property of a task based on its current state. 
   const toggleTask = (id: string) => {
     const updatedTasks: Task[] = tareas.map((task) => {
       if (task.id === id) {
@@ -322,20 +324,22 @@ function App() {
     });
 
     setTareas(updatedTasks);
-    // Save updated tasks to Local Storage
+    //Save updated tasks to Local Storage
     localStorage.setItem('tareas', JSON.stringify(updatedTasks));
     }
 
+    //Removes a task from the list and updates the state and local storage.
   const removeTask = (id: string, isDeleteButtonClicked = false) => {
     const updatedTasks: Task[] = tareas.filter((task) => task.id !== id);
     setTareas(updatedTasks);
-    // Save updated tasks to Local Storage
+    //Save updated tasks to Local Storage
     localStorage.setItem('tareas', JSON.stringify(updatedTasks));
    
   };
   
+  //Retrieves tasks stored in local storage when the component mounts.
   useEffect(() => {
-    // Recover tasks saved in Local Storage on page load
+    //Recover tasks saved in Local Storage on page load
     const storedTareas = JSON.parse(localStorage.getItem('tareas') || '[]');
     setTareas(storedTareas);
   }, []);
@@ -344,7 +348,10 @@ function App() {
   //In order to use Modal
   const [show, setShow] = useState(false);
 
+  //Function to close the modal by updating the state.
   const handleClose = () => setShow(false);
+
+  //Function to show the modal by updating the state.
   const handleShow = () => setShow(true);
 
   return (
@@ -392,6 +399,7 @@ function App() {
             </div>
             <div className='title-plus-component-button-task'>
               <Routes>
+              <Route path="/" element={<Navigate to="/bandeja-de-entrada" />} />{/* Ruta de redirección */}
                 <Route
                   path="/bandeja-de-entrada"
                   element={<BandejaEntrada tareas={tareas} addTask={addTask} removeTask={removeTask} toggleTask={toggleTask}/>}

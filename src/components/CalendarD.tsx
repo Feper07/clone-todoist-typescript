@@ -16,6 +16,7 @@
       const [showOptions, setShowOptions] = useState(false);
       const [selectedDate, setSelectedDate] = useState<Date | null | undefined>(props.value);
       const [todayDate, setTodayDate] = useState<Date>(new Date());
+      
       React.useEffect(() => {
         setSelectedDate(props.value);         
       }, [props.value]);
