@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Route, Routes, Link, Outlet, Navigate } from "react-router-dom";
+import { HashRouter as Router, Route, Routes, Link, Outlet, Navigate } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 import './App.css';
@@ -399,7 +399,7 @@ function App() {
             </div>
             <div className='title-plus-component-button-task'>
               <Routes>
-              <Route path="/" element={<Navigate to="/bandeja-de-entrada" />} />{/* Ruta de redirección */}
+                <Route path="/" element={<Navigate to="/bandeja-de-entrada" />} />{/* Ruta de redirección */}
                 <Route
                   path="/bandeja-de-entrada"
                   element={<BandejaEntrada tareas={tareas} addTask={addTask} removeTask={removeTask} toggleTask={toggleTask}/>}
@@ -411,6 +411,7 @@ function App() {
                 <Route path="/tareas-realizadas" element={<TareasRealizadas toggleTask={toggleTask} tareas={tareas} removeTask={removeTask} />} />
                 
                 <Route path="/filtros-y-etiquetas" element={<FiltrosEtiquetas />} />
+                <Route path="*" element={<Navigate to="/bandeja-de-entrada" />} />{/* Cualquier ruta que no coincida con las rutas definidas sea redirigida a /bandeja-de-entrada */}
                 {/* Add similar routes for other components */}
               </Routes>
             </div>
